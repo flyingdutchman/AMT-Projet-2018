@@ -1,6 +1,7 @@
 package ch.heigvd.amt.mvcdemo.web.controllers;
 
 import java.io.IOException;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AuthenticationServlet extends HttpServlet {
 
+  //@EJB
+  //UsersManager userManager;
+
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
    * methods.
@@ -72,10 +76,17 @@ public class AuthenticationServlet extends HttpServlet {
     }
     targetUrl = request.getContextPath() + targetUrl;
 
-    if ("login".equals(action)) {
+    boolean goodPassword = "admin".equals(password);//userManager.getUserByMail(email).getPassword().equals(password);
+    if(null == null) {
+      response.addHeader("error", "invalid mail");
+    } else if(!goodPassword) {
+      response.addHeader("error", "invalid password");
+    }
+
+    if ("login".equals(action) && goodPassword) {
       request.getSession().setAttribute("principal", email);
       response.sendRedirect(targetUrl);
-    } else if ("logout".equals(action)) {
+    } else if ("logout".equals(action) || !goodPassword) {
       request.getSession().invalidate();
       response.sendRedirect(request.getContextPath());
     } else {
