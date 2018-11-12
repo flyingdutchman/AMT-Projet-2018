@@ -1,6 +1,6 @@
-package ch.heigvd.amt.mvcdemo.services;
+package ch.heigvd.amt.mvc.services;
 
-import ch.heigvd.amt.mvcdemo.model.Beer;
+import ch.heigvd.amt.mvc.model.Beer;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.Singleton;

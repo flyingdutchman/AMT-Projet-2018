@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcdemo.util;
+package ch.heigvd.amt.mvc.util;
 
 import org.apache.commons.lang.ArrayUtils;
 

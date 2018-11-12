@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcdemo.web.controllers;
+package ch.heigvd.amt.mvc.web.controllers;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

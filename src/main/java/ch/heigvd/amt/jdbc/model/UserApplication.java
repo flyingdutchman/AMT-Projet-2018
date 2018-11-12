@@ -1,5 +1,5 @@
 package ch.heigvd.amt.jdbc.model;
 
-public class User {
+public class UserApplication {
 
 }
