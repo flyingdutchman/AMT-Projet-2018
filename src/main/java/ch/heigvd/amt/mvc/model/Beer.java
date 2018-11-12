@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcdemo.model;
+package ch.heigvd.amt.mvc.model;
 
 /**
  * This is a model class. Something that is often called a Plain Old Java Object
