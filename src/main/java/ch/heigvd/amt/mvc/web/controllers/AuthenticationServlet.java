@@ -1,5 +1,8 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
+import ch.heigvd.amt.jdbc.dao.UsersManager;
+import ch.heigvd.amt.jdbc.model.User;
+
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -38,8 +41,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AuthenticationServlet extends HttpServlet {
 
-  //@EJB
-  //UsersManager userManager;
+  @EJB
+  UsersManager userManager;
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -76,11 +79,15 @@ public class AuthenticationServlet extends HttpServlet {
     }
     targetUrl = request.getContextPath() + targetUrl;
 
-    boolean goodPassword = "admin".equals(password);//userManager.getUserByMail(email).getPassword().equals(password);
-    if(null == null) {
-      response.addHeader("error", "invalid mail");
-    } else if(!goodPassword) {
-      response.addHeader("error", "invalid password");
+    //try to get the user to check his password, put an attribute error if
+    User user = userManager.getUserByMail(email);
+    request.setAttribute("user", user);
+    boolean goodPassword = false;
+    if(user != null) {
+      goodPassword = user.getPassword().equals(password);
+      if(!goodPassword) {
+        request.setAttribute("error", "invalid password");
+      }
     }
 
     if ("login".equals(action) && goodPassword) {
