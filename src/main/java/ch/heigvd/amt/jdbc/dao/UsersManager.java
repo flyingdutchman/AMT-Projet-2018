@@ -43,7 +43,7 @@ public class UsersManager implements UsersManagerLocal {
     }
 
     @Override
-    public void updateAccount(String email, String password, String lastName, String firstName) {
+    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName) {
         User user = getUserByMail(email);
 
         if(!email.isEmpty()) {
