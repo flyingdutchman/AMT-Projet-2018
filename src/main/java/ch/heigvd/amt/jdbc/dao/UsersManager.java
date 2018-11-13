@@ -83,7 +83,6 @@ public class UsersManager implements UsersManagerLocal {
 
         try(Connection connection = database.getConnection()) {
             PreparedStatement statement2 = connection.prepareStatement(queryGetInsertedUser);
-            statement2.setString(1, email);
             ResultSet rs = statement2.executeQuery();
             rs.next();
             User user = new User(rs.getString(1),
