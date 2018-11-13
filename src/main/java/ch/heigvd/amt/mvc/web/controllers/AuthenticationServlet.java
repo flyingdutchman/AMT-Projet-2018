@@ -1,6 +1,10 @@
-package ch.heigvd.amt.mvcdemo.web.controllers;
+package ch.heigvd.amt.mvc.web.controllers;
+
+import ch.heigvd.amt.jdbc.dao.UsersManager;
+import ch.heigvd.amt.jdbc.model.User;
 
 import java.io.IOException;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +41,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AuthenticationServlet extends HttpServlet {
 
+  @EJB
+  UsersManager userManager;
+
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
    * methods.
@@ -68,14 +75,25 @@ public class AuthenticationServlet extends HttpServlet {
      */
     String targetUrl = (String) request.getAttribute("targetUrl");
     if (targetUrl == null) {
-      targetUrl = "/pages/home";
+      targetUrl = "/home";
     }
     targetUrl = request.getContextPath() + targetUrl;
 
-    if ("login".equals(action)) {
+    //try to get the user to check his password, put an attribute error if
+    User user = userManager.getUserByMail(email);
+    request.getSession().setAttribute("user", user);
+    boolean goodPassword = false;
+    if(user != null) {
+      goodPassword = user.getPassword().equals(password);
+      if(!goodPassword) {
+        request.setAttribute("error", "invalid password");
+      }
+    }
+
+    if ("login".equals(action) && goodPassword) {
       request.getSession().setAttribute("principal", email);
       response.sendRedirect(targetUrl);
-    } else if ("logout".equals(action)) {
+    } else if ("logout".equals(action) || !goodPassword) {
       request.getSession().invalidate();
       response.sendRedirect(request.getContextPath());
     } else {
