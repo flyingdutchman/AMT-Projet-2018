@@ -12,7 +12,7 @@ public interface UsersManagerLocal {
     public List<User> getUsers();
     public User createAccount(String email, String password, String lastName, String firstName);
     public User getUserByMail(String email);
-    public void updateAccount(String email, String password, String lastName, String firstName);
+    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName);
     public void deleteUserAccount(String email);
     public List<UserApplication> getApplicationList(String email);
 }

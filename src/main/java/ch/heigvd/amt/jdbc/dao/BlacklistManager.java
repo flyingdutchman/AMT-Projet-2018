@@ -2,11 +2,13 @@ package ch.heigvd.amt.jdbc.dao;
 
 import ch.heigvd.amt.jdbc.model.Blacklist;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
 @Stateless
 public class BlacklistManager implements BlacklistManagerLocal {
+    @Resource(name = "jdbc/AMT_DB")
     private DataSource database;
 
     @Override

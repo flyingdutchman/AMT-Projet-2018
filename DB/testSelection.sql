@@ -1,2 +1,1 @@
-SELECT `email`, `firstname` FROM `User`
-WHERE `right`='ADMIN';
+SELECT LAST_INSERT_ID();

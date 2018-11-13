@@ -2,11 +2,13 @@ package ch.heigvd.amt.jdbc.dao;
 
 import ch.heigvd.amt.jdbc.model.UserApplication;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.sql.DataSource;
 
 @Stateless
 public class UserApplicationManager implements UserApplicationManagerLocal {
+    @Resource(name = "jdbc/AMT_DB")
     private DataSource database;
 
     @Override
@@ -20,12 +22,12 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
     }
 
     @Override
-    public void updateApplication(String name, String description) {
+    public void updateApplication(long id, String name, String description) {
 
     }
 
     @Override
-    public void deleteApplication(String apkName) {
+    public void deleteApplication(long id, String apkName) {
 
     }
 }
