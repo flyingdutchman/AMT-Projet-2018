@@ -37,7 +37,7 @@ public class HomeServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     // get the visuable app list depending on the rights of "user" attribute
-    User user = (User)request.getAttribute("user");
+    User user = (User)request.getSession().getAttribute("user");
     List<UserApplication> appList = new ArrayList<UserApplication>();
     if(usersManager.isAdmin(user)) {
       List<User> listUser = usersManager.getUsers();

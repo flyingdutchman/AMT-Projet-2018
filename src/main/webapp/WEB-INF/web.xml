@@ -13,20 +13,12 @@
         <servlet-class>ch.heigvd.amt.mvc.web.controllers.AuthenticationServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BeersServlet</servlet-name>
-        <servlet-class>ch.heigvd.amt.mvc.web.controllers.BeersServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>ch.heigvd.amt.mvc.web.controllers.HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AuthenticationServlet</servlet-name>
         <url-pattern>/auth</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>BeersServlet</servlet-name>
-        <url-pattern>/pages/beers</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>

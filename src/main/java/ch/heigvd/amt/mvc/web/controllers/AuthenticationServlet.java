@@ -81,7 +81,7 @@ public class AuthenticationServlet extends HttpServlet {
 
     //try to get the user to check his password, put an attribute error if
     User user = userManager.getUserByMail(email);
-    request.setAttribute("user", user);
+    request.getSession().setAttribute("user", user);
     boolean goodPassword = false;
     if(user != null) {
       goodPassword = user.getPassword().equals(password);
