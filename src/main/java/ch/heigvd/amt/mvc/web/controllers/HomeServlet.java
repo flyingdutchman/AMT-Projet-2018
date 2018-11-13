@@ -1,18 +1,16 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.jdbc.dao.UsersManager;
-import ch.heigvd.amt.jdbc.model.User;
-import ch.heigvd.amt.jdbc.model.UserApplication;
+import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
+import ch.heigvd.amt.mvc.model.User;
+import ch.heigvd.amt.mvc.model.UserApplication;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * This a very simple controller. There is no service to invoke, no model to
@@ -24,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HomeServlet extends HttpServlet {
 
   @EJB
-  UsersManager userManager;
+  UsersManagerLocal userManager;
 
   /**
    * Handles the HTTP <code>GET</code> method.

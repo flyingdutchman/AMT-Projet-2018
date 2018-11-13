@@ -1,4 +1,4 @@
-package ch.heigvd.amt.jdbc.model;
+package ch.heigvd.amt.mvc.model;
 
 import java.util.List;
 

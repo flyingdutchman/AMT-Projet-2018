@@ -1,4 +1,4 @@
-package ch.heigvd.amt.jdbc.model;
+package ch.heigvd.amt.mvc.model;
 
 public class UserApplication {
     private final String API_KEY;
