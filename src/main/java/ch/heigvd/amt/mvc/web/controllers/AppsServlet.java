@@ -25,7 +25,7 @@ public class AppsServlet extends HttpServlet {
     UserApplicationManager appManager;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int appId = (int)request.getAttribute("id");
+        Integer appId = (Integer)request.getAttribute("id");
         if (appId == null) {
             User user = (User) request.getSession().getAttribute("user");
             List<UserApplication> appList = userManager.getApplicationList(user.getEmail());
