@@ -1,15 +1,15 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.jdbc.dao.BlacklistManager;
-import ch.heigvd.amt.jdbc.dao.UsersManager;
+import ch.heigvd.amt.jdbc.dao.BlacklistManagerLocal;
+import ch.heigvd.amt.jdbc.dao.UsersManagerLocal;
 import ch.heigvd.amt.jdbc.model.User;
 
-import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * This servlet illustrates various aspects of the Servlet API.
@@ -43,10 +43,10 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationServlet extends HttpServlet {
 
   @EJB
-  UsersManager userManager;
+  UsersManagerLocal userManager;
 
   @EJB
-  BlacklistManager blacklistManager;
+  BlacklistManagerLocal blacklistManager;
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

@@ -25,6 +25,9 @@ public class UsersManager implements UsersManagerLocal {
 
     List<User> users = new ArrayList<>();
 
+    @Resource(name = "jdbc/AMT_DB")
+    private DataSource database;
+
     public UsersManager() {
         try(Connection connection = database.getConnection()) {
             PreparedStatement statementBegin = connection.prepareStatement(queryGetAdmins);
@@ -54,9 +57,6 @@ public class UsersManager implements UsersManagerLocal {
             throw new RuntimeException(e);
         }
     }
-
-    @Resource(name = "jdbc/AMT_DB")
-    private DataSource database;
 
     @Override
     public boolean isAdmin(User user) {
