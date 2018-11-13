@@ -17,9 +17,43 @@ import java.util.List;
 public class UsersManager implements UsersManagerLocal {
     private final String CHECK_RIGHT = "ADMIN";
     private final String queryInsertUser = "INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`)" +
-                                                    " VALUES (?, ?, ?, ?)";
+                                                " VALUES (?, ?, ?, ?)";
+    private final String queryGetAdmins = "SELECT `email`, `password`, `firstName`, `lastName`, `right` FROM `user`" +
+                                                "WHERE `right`='ADMIN'";
     private final String queryGetInsertedUser = "SELECT `email`, `password`, `firstName`, `lastName`, `right` FROM `user`" +
-                                                    "WHERE `right`='DEVELOPER' && `email`=?";
+                                                "WHERE `right`='DEVELOPER' && `email`=?";
+
+    List<User> users = new ArrayList<>();
+
+    public UsersManager() {
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement statementBegin = connection.prepareStatement(queryGetAdmins);
+            ResultSet rs = statementBegin.executeQuery();
+            rs.next();
+            users.add(new User(rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    getApplicationList(rs.getString(1))));
+            rs.next();
+            users.add(new User(rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    getApplicationList(rs.getString(1))));
+            rs.next();
+            users.add(new User(rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    getApplicationList(rs.getString(1))));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Resource(name = "jdbc/AMT_DB")
     private DataSource database;
@@ -27,13 +61,10 @@ public class UsersManager implements UsersManagerLocal {
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().contains(CHECK_RIGHT);
-
     }
 
     @Override
     public List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-//        users.add();
         return users;
     }
 
@@ -61,6 +92,7 @@ public class UsersManager implements UsersManagerLocal {
                                 rs.getString(4),
                                 rs.getString(5),
                                 getApplicationList(email));
+            users.add(user);
             return user;
 
         } catch (SQLException e) {
