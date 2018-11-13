@@ -31,35 +31,35 @@ public class UsersManager implements UsersManagerLocal {
     @Resource(name = "jdbc/AMT_DB")
     private DataSource database;
 
-    public UsersManager() {
-        try(Connection connection = database.getConnection()) {
-            PreparedStatement statementBegin = connection.prepareStatement(queryGetAdmins);
-            ResultSet rs = statementBegin.executeQuery();
-            rs.next();
-            users.add(new User(rs.getString(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    getApplicationList(rs.getString(1))));
-            rs.next();
-            users.add(new User(rs.getString(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    getApplicationList(rs.getString(1))));
-            rs.next();
-            users.add(new User(rs.getString(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    getApplicationList(rs.getString(1))));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public UsersManager() {
+//        try(Connection connection = database.getConnection()) {
+//            PreparedStatement statementBegin = connection.prepareStatement(queryGetAdmins);
+//            ResultSet rs = statementBegin.executeQuery();
+//            rs.next();
+//            users.add(new User(rs.getString(1),
+//                    rs.getString(2),
+//                    rs.getString(3),
+//                    rs.getString(4),
+//                    rs.getString(5),
+//                    getApplicationList(rs.getString(1))));
+//            rs.next();
+//            users.add(new User(rs.getString(1),
+//                    rs.getString(2),
+//                    rs.getString(3),
+//                    rs.getString(4),
+//                    rs.getString(5),
+//                    getApplicationList(rs.getString(1))));
+//            rs.next();
+//            users.add(new User(rs.getString(1),
+//                    rs.getString(2),
+//                    rs.getString(3),
+//                    rs.getString(4),
+//                    rs.getString(5),
+//                    getApplicationList(rs.getString(1))));
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public boolean isAdmin(User user) {
