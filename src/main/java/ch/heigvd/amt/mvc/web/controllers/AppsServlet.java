@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "UserSettingsServlet", urlPatterns = {"/user/settings"})
-public class UserSettingsServlet extends HttpServlet {
+@WebServlet(name = "AppsServlet", urlPatterns = {"/apps"})
+public class AppsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
