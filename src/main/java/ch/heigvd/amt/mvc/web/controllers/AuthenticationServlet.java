@@ -75,7 +75,7 @@ public class AuthenticationServlet extends HttpServlet {
      */
     String targetUrl = (String) request.getAttribute("targetUrl");
     if (targetUrl == null) {
-      targetUrl = "/pages/home";
+      targetUrl = "/home";
     }
     targetUrl = request.getContextPath() + targetUrl;
 
