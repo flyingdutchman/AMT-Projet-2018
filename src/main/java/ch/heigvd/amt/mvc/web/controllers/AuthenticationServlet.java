@@ -1,5 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
+import ch.heigvd.amt.jdbc.dao.BlacklistManager;
 import ch.heigvd.amt.jdbc.dao.UsersManager;
 import ch.heigvd.amt.jdbc.model.User;
 
@@ -44,6 +45,9 @@ public class AuthenticationServlet extends HttpServlet {
   @EJB
   UsersManager userManager;
 
+  @EJB
+  BlacklistManager blacklistManager;
+
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
    * methods.
@@ -83,17 +87,23 @@ public class AuthenticationServlet extends HttpServlet {
     User user = userManager.getUserByMail(email);
     request.getSession().setAttribute("user", user);
     boolean goodPassword = false;
-    if(user != null) {
+    if (user == null) {
+      request.setAttribute("error", "invalid password or mail");
+    } else {
       goodPassword = user.getPassword().equals(password);
       if(!goodPassword) {
-        request.setAttribute("error", "invalid password");
+        request.setAttribute("error", "invalid password or mail");
+      } else if (blacklistManager.isUserInBlacklist(user.getEmail())) {
+        request.setAttribute("error", "you have been blacklisted");
       }
     }
 
-    if ("login".equals(action) && goodPassword) {
+    boolean errorOccured = request.getAttribute("error") != null;
+
+    if ("login".equals(action) && goodPassword && !errorOccured) {
       request.getSession().setAttribute("principal", email);
       response.sendRedirect(targetUrl);
-    } else if ("logout".equals(action) || !goodPassword) {
+    } else if ("logout".equals(action) || !goodPassword || errorOccured) {
       request.getSession().invalidate();
       response.sendRedirect(request.getContextPath());
     } else {
