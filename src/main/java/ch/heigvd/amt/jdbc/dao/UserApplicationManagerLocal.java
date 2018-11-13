@@ -6,8 +6,8 @@ import javax.ejb.Local;
 
 @Local
 public interface UserApplicationManagerLocal {
-    public UserApplication getApplication(int name);
-    public void createApplication(String name, String description);
-    public void updateApplication(String name, String description);
-    public void deleteApplication(String apkName);
+    public UserApplication getApplication(int id);
+    public UserApplication createApplication(String name, String description);
+    public void updateApplication(long id, String name, String description);
+    public void deleteApplication(long id, String apkName);
 }
