@@ -5,6 +5,8 @@ import ch.heigvd.amt.jdbc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UsersManager implements UsersManagerLocal {
     private final String CHECK_RIGHT = "ADMIN";
     private final String queryInsertUser = "INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`)" +
