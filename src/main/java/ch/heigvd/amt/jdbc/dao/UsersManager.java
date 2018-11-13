@@ -28,7 +28,7 @@ public class UsersManager implements UsersManagerLocal {
 
     List<User> users = new ArrayList<>();
 
-    @Resource(name = "jdbc/AMT_DB")
+    @Resource(lookup = "jdbc/AMT_DB")
     private DataSource database;
 
 //    public UsersManager() {
