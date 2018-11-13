@@ -1,6 +1,6 @@
-package ch.heigvd.amt.jdbc.dao;
+package ch.heigvd.amt.mvc.dao;
 
-import ch.heigvd.amt.jdbc.model.Blacklist;
+import ch.heigvd.amt.mvc.model.Blacklist;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;

@@ -1,12 +1,10 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.jdbc.dao.UsersManager;
-import ch.heigvd.amt.jdbc.model.User;
-import ch.heigvd.amt.jdbc.model.UserApplication;
+import ch.heigvd.amt.mvc.dao.UsersManager;
+import ch.heigvd.amt.mvc.model.User;
+import ch.heigvd.amt.mvc.model.UserApplication;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;

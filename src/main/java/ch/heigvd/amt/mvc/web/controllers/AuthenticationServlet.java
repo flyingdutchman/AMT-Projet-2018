@@ -1,8 +1,8 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.jdbc.dao.BlacklistManagerLocal;
-import ch.heigvd.amt.jdbc.dao.UsersManagerLocal;
-import ch.heigvd.amt.jdbc.model.User;
+import ch.heigvd.amt.mvc.dao.BlacklistManagerLocal;
+import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
+import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;

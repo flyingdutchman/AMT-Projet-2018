@@ -1,7 +1,7 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.jdbc.dao.UsersManager;
-import ch.heigvd.amt.jdbc.model.User;
+import ch.heigvd.amt.mvc.dao.UsersManager;
+import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;

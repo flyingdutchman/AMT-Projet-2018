@@ -1,7 +1,7 @@
-package ch.heigvd.amt.jdbc.dao;
+package ch.heigvd.amt.mvc.dao;
 
-import ch.heigvd.amt.jdbc.model.User;
-import ch.heigvd.amt.jdbc.model.UserApplication;
+import ch.heigvd.amt.mvc.model.User;
+import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UsersManager implements UsersManagerLocal {
     private final String CHECK_RIGHT = "ADMIN";
     private final String queryInsertUser = "INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`)" +

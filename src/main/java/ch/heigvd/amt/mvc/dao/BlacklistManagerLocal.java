@@ -1,4 +1,4 @@
-package ch.heigvd.amt.jdbc.dao;
+package ch.heigvd.amt.mvc.dao;
 
 import javax.ejb.Local;
 
