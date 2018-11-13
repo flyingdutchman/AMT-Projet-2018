@@ -4,8 +4,6 @@ import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,14 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UserApplicationManager implements UserApplicationManagerLocal {
 
     private final String queryInsertApp = "INSERT INTO `application` (`name`, `description`,  `api_key`, `api_secret`)" +
             " VALUES (?, ?, ?, ?)";
     private final String queryGetInsertedApp = "SELECT `idApplication`, `name`, `description`, `api_key`, `api_secret` FROM `application`";
 
-    @Resource(name = "jdbc/AMT_DB")
+    @Resource(lookup = "AMT_DB")
     private DataSource database;
 
     @Override

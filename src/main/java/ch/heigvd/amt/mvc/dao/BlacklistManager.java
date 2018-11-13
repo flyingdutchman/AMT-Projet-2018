@@ -4,23 +4,21 @@ import ch.heigvd.amt.mvc.model.Blacklist;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BlacklistManager implements BlacklistManagerLocal {
-    @Resource(name = "jdbc/AMT_DB")
+    @Resource(lookup = "AMT_DB")
     private DataSource database;
 
     @Override
     public boolean isUserInBlacklist(String email) {
-        for(int i = 0; i < Blacklist.getUsersList().size(); ++i) {
-            if(Blacklist.getUsersList().get(i).contains(email)) {
-                return true;
-            }
-        }
+//        for(int i = 0; i < Blacklist.getUsersList().size(); ++i) {
+//            if(Blacklist.getUsersList().get(i).contains(email)) {
+//                return true;
+//            }
+//        }
         return false;
     }
 

@@ -5,8 +5,6 @@ import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +25,7 @@ public class UsersManager implements UsersManagerLocal {
                                                 "WHERE `right`='DEVELOPER' && `email`=?";
 
     List<User> users = new ArrayList<>();
+    boolean once = false;
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -61,6 +60,64 @@ public class UsersManager implements UsersManagerLocal {
 //        }
 //    }
 
+    public void init() {
+
+        System.out.println("Before search");
+        if(!once) {
+            try (Connection connection = database.getConnection()) {
+                System.out.println("Before insertion");
+                PreparedStatement statementBegin = connection.prepareStatement(queryGetAdmins);
+                ResultSet rs = statementBegin.executeQuery();
+                System.out.println("Result " + rs.toString());
+                rs.next();
+                System.out.println("Result + next " + rs.toString());
+                System.out.println("Result of column 1 " + rs.getString(1));
+                System.out.println("Result of column 2 " + rs.getString(2));
+                System.out.println("Result of column 3 " + rs.getString(3));
+                System.out.println("Result of column 4 " + rs.getString(4));
+                System.out.println("Result of column 5 " + rs.getString(5));
+                users.add(new User(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        null));
+                System.out.println("End insert 1");
+                rs.next();
+                System.out.println("Result + next 2 " + rs.toString());
+                System.out.println("Result of column 1 " + rs.getString(1));
+                System.out.println("Result of column 2 " + rs.getString(2));
+                System.out.println("Result of column 3 " + rs.getString(3));
+                System.out.println("Result of column 4 " + rs.getString(4));
+                System.out.println("Result of column 5 " + rs.getString(5));
+                users.add(new User(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        null));
+                System.out.println("End insert 2");
+                rs.next();
+                System.out.println("Result + next 3 " + rs.toString());
+                System.out.println("Result of column 1 " + rs.getString(1));
+                System.out.println("Result of column 2 " + rs.getString(2));
+                System.out.println("Result of column 3 " + rs.getString(3));
+                System.out.println("Result of column 4 " + rs.getString(4));
+                System.out.println("Result of column 5 " + rs.getString(5));
+                users.add(new User(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        null));
+                System.out.println("End insert 3");
+                System.out.println("User 1: " + users.get(0).getEmail() + " User 2: " + users.get(1).getEmail() + " User 3: " + users.get(2).getEmail());
+                once = true;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().contains(CHECK_RIGHT);
@@ -105,10 +162,14 @@ public class UsersManager implements UsersManagerLocal {
     @Override
     public User getUserByMail(String email) {
         for(int i = 0; i < getUsers().size(); ++i) {
+            System.out.println("Searching");
+            System.out.println("User: " + getUsers().get(i).getEmail());
             if(getUsers().get(i).getEmail().contains(email)){
+                System.out.println("Found");
                 return getUsers().get(i);
             }
         }
+        System.out.println("Nothing");
         return null;
     }
 

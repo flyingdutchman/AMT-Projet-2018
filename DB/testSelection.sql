@@ -1,3 +1,4 @@
-SELECT `email`, `password`, `firstName`, `lastName`, `right` FROM `user`;
+SELECT `email`, `password`, `firstName`, `lastName`, `right` FROM `user`
+WHERE `right`='ADMIN';
 
-SELECT `idApplication`, `name`, `description`, `api_key`, `api_secret` FROM `application`;
+-- SELECT `idApplication`, `name`, `description`, `api_key`, `api_secret` FROM `application`;
