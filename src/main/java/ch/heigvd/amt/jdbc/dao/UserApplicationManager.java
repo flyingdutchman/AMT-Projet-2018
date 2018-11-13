@@ -4,6 +4,8 @@ import ch.heigvd.amt.jdbc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UserApplicationManager implements UserApplicationManagerLocal {
 
     private final String queryInsertApp = "INSERT INTO `application` (`name`, `description`,  `api_key`, `api_secret`)" +
