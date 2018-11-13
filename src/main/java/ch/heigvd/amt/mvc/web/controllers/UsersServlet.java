@@ -17,10 +17,6 @@ public class UsersServlet extends HttpServlet {
     @EJB
     UsersManager userManager;
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User)request.getSession().getAttribute("user");
         if(!userManager.isAdmin(user)) {

@@ -10,7 +10,7 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
     private DataSource database;
 
     @Override
-    public UserApplication getApplication(String name) {
+    public UserApplication getApplication(int name) {
         return null;
     }
 
