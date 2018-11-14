@@ -70,7 +70,7 @@
               </div>
             </div>
             <input type="hidden" name="action" value="login">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+            <button class="btn btn-lg btn-primary btn-block" id="btnLogin" type="submit">Login</button>
           </form>
           <div class="text-center">
             <a class="d-block small mt-3" href="register">Register an Account</a>

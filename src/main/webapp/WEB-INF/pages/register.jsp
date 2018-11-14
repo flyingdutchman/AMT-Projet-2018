@@ -64,7 +64,7 @@
           </div>
         </div>
         <input type="hidden" name="action" value="login">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <button class="btn btn-lg btn-primary btn-block" id="btnRegister" type="submit">Register</button>
       </form>
     </div>
   </div>
