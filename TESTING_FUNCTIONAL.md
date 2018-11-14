@@ -1,0 +1,1 @@
+Pour lancer les tests de scénarios (User Acceptance tests). Il faut tout d'abord lancer le projet AMT-Project qui déployera notre site web dans payara. Ainsi l'URL http://localhost:8080/AMT-Project/ sera accessible aux test. Ensuite, il suffit de lancer le projet AMTProjectUserTest.
