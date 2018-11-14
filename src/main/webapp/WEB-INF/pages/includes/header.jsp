@@ -115,10 +115,10 @@
               <i class="fas fa-user-circle fa-fw"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="settings">Settings</a>
               <a class="dropdown-item" href="#">Activity Log</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="./auth?action=logout">Logout</a>
+              <a class="dropdown-item" href="./auth?action=logout" id="btnLogout">Logout</a>
             </div>
           </li>
         </ul>

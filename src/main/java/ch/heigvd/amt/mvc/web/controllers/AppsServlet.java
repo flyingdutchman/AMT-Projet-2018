@@ -1,7 +1,7 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UserApplicationManager;
-import ch.heigvd.amt.mvc.dao.UsersManager;
+import ch.heigvd.amt.mvc.dao.UserApplicationManagerLocal;
+import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
 
@@ -18,13 +18,13 @@ import java.util.List;
 public class AppsServlet extends HttpServlet {
 
     @EJB
-    UsersManager userManager;
+    UsersManagerLocal userManager;
 
     @EJB
-    UserApplicationManager appManager;
+    UserApplicationManagerLocal appManager;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer appId = (Integer)request.getAttribute("id");
+        Integer appId = (Integer) request.getAttribute("id");
         if (appId == null) {
             User user = (User) request.getSession().getAttribute("user");
             List<UserApplication> appList = userManager.getApplicationList(user.getEmail());

@@ -7,17 +7,18 @@
   <div id="content-wrapper">
 
     <div class="container-fluid">
+
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#">Home</a>
+          <a href="/home">Home</a>
         </li>
-        <li class="breadcrumb-item active">Overview</li>
+        <li class="breadcrumb-item active">Apps</li>
       </ol>
-      <h2>Welcome to the demo app!</h2>
 
-      <div class="alert alert-info" role="alert">
-        You are logged in as ${principal}.
-      </div>
+
+
+
+
     </div>
 
     <!-- Sticky Footer -->
