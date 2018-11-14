@@ -37,6 +37,6 @@ public class HomeServlet extends HttpServlet {
       User user = (User) request.getSession().getAttribute("user");
       List<UserApplication> appList = userManager.getApplicationList(user.getEmail());
       request.setAttribute("app_list", appList);
-      request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
+      request.getRequestDispatcher("/WEB-INF/pages/home.jsp").forward(request, response);
   }
 }
