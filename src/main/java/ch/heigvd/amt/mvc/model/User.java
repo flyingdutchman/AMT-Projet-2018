@@ -1,6 +1,6 @@
 package ch.heigvd.amt.mvc.model;
 
-import java.util.List;
+import java.util.Map;
 
 public class User {
     private final String RIGHT;
@@ -9,20 +9,18 @@ public class User {
     private String password;
     private String lastName;
     private String firstName;
-    private List<UserApplication> applicationList;
+    private Map<String, UserApplication> applicationList;
     private boolean inBlacklist = false;
 
     public User(String email,
                 String password,
                 String lastName,
                 String firstName,
-                String right,
-                List<UserApplication> applicationList) {
+                String right) {
         this.email = email;
         this.password = password;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.applicationList = applicationList;
         this.RIGHT = right;
     }
 
@@ -62,12 +60,12 @@ public class User {
         return inBlacklist;
     }
 
-    public List<UserApplication> getApplicationList() {
+    public Map<String, UserApplication> getApplicationList() {
         return applicationList;
     }
 
-    public void setApplicationList(UserApplication apk) {
-        this.applicationList.add(apk);
+    public void setApplicationList(String email, UserApplication apk) {
+        this.applicationList.put(email, apk);
     }
 
     public String getRight() {

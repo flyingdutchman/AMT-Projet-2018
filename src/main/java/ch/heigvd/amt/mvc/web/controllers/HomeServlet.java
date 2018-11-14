@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 /**
  * This a very simple controller. There is no service to invoke, no model to
@@ -35,7 +35,7 @@ public class HomeServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       User user = (User) request.getSession().getAttribute("user");
-      List<UserApplication> appList = userManager.getApplicationList(user.getEmail());
+      Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
       request.setAttribute("app_list", appList);
       request.getRequestDispatcher("/WEB-INF/pages/home.jsp").forward(request, response);
   }
