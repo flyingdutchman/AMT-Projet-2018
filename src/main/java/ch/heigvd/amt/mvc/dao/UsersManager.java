@@ -142,18 +142,18 @@ public class UsersManager implements UsersManagerLocal {
         }
 
         try(Connection connection = database.getConnection()) {
-            PreparedStatement statement2 = connection.prepareStatement(queryGetInsertedUser);
-            ResultSet rs = statement2.executeQuery();
-            rs.next();
-            User user = new User(rs.getString(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getString(4),
-                                rs.getString(5),
-                                getApplicationList(email));
-            users.add(user);
-            return user;
-
+//            PreparedStatement statement2 = connection.prepareStatement(queryGetInsertedUser);
+//            ResultSet rs = statement2.executeQuery();
+//            rs.next();
+//            User user = new User(rs.getString(1),
+//                                rs.getString(2),
+//                                rs.getString(3),
+//                                rs.getString(4),
+//                                rs.getString(5),
+//                                getApplicationList(email));
+//            users.add(user);
+//            return user;
+            return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -164,7 +164,7 @@ public class UsersManager implements UsersManagerLocal {
         for(int i = 0; i < getUsers().size(); ++i) {
             System.out.println("Searching");
             System.out.println("User: " + getUsers().get(i).getEmail());
-            if(getUsers().get(i).getEmail().contains(email)){
+            if(getUsers().get(i).getEmail().equals(email)){
                 System.out.println("Found");
                 return getUsers().get(i);
             }

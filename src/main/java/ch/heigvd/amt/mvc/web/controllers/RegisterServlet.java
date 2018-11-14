@@ -1,6 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UsersManager;
+import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
@@ -15,11 +15,15 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
     @EJB
-    UsersManager userManager;
+    UsersManagerLocal userManager;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User)request.getAttribute("resiteringUser");
-        User createdUser = userManager.createAccount(user.getEmail(), user.getPassword(), user.getLastName(), user.getFirstName());
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String lastName = request.getParameter("lastName");
+        String firstName = request.getParameter("firstName");
+
+        User createdUser = userManager.createAccount(email, password, lastName, firstName);
         request.setAttribute("createdUser", createdUser);
         request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
     }

@@ -55,6 +55,8 @@ public class SecurityFilter implements Filter {
       isTargetUrlProtected = false;
     } else if ("/auth".equals(path)) {
       isTargetUrlProtected = false;
+    } else if ("/register".equals(path)){
+      isTargetUrlProtected = false;
     } else {
       /*
        * Let's imagine that the user has sent a request to /mvc/pages/beers before logging into the
