@@ -1,8 +1,12 @@
+DROP TABLE IF EXISTS `userApplication`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `application`;
+DROP TABLE IF EXISTS `blacklist`;
+
 --
 -- Table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `email` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
@@ -16,7 +20,6 @@ CREATE TABLE `user` (
 -- Table `application`
 --
 
-DROP TABLE IF EXISTS `application`;
 CREATE TABLE `application` (
   `idApplication` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -30,7 +33,6 @@ CREATE TABLE `application` (
 -- Table `userApplication`
 --
 
-DROP TABLE IF EXISTS `userApplication`;
 CREATE TABLE `userApplication` (
   `idApk` int(10) unsigned NOT NULL,
   `idUser` varchar(45) NOT NULL,
@@ -43,10 +45,8 @@ CREATE TABLE `userApplication` (
 -- Table `blacklist`
 --
 
-DROP TABLE IF EXISTS `blacklist`;
 CREATE TABLE `blacklist` (
   `idBlackList` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `fk_userEmail` varchar(45) NOT NULL, 
-  PRIMARY KEY (`idBlackList`),
-  KEY `fk_userEmail_idx` (`fk_userEmail`)
+  PRIMARY KEY (`idBlackList`)
 );

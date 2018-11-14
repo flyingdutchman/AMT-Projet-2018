@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "AppsServlet", urlPatterns = {"/apps"})
 public class AppsServlet extends HttpServlet {
@@ -27,7 +27,7 @@ public class AppsServlet extends HttpServlet {
         Integer appId = (Integer) request.getAttribute("id");
         if (appId == null) {
             User user = (User) request.getSession().getAttribute("user");
-            List<UserApplication> appList = userManager.getApplicationList(user.getEmail());
+            Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
             request.setAttribute("app_list", appList);
             request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
         } else {

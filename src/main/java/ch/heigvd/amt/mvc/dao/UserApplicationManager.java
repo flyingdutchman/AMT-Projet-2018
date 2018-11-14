@@ -27,7 +27,7 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
     }
 
     @Override
-    public UserApplication createApplication(String name, String description) {
+    public UserApplication createApplication(String email, String name, String description) {
         try(Connection connection = database.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(queryInsertApp);
             statement.setString(1, name);

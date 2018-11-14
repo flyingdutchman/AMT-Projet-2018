@@ -22,7 +22,7 @@ public class UsersServlet extends HttpServlet {
         if(!userManager.isAdmin(user)) {
             response.setStatus(403);
         } else {
-            request.setAttribute("users", userManager.getUsers());
+            request.setAttribute("users", userManager.getAllUsers());
         }
         request.getRequestDispatcher("/WEB-INF/pages/users.jsp").forward(request, response);
     }
