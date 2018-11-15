@@ -64,7 +64,7 @@ public class User {
         return applicationList;
     }
 
-    public void setApplicationList(String email, UserApplication apk) {
+    public void setApplicationInList(String email, UserApplication apk) {
         this.applicationList.put(email, apk);
     }
 

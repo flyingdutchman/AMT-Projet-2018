@@ -7,13 +7,15 @@ public class UserApplication {
     private long id;
     private String name;
     private String description;
+    private String owner;
 
-    public UserApplication(long id, String name, String description, String apiKey, String apiPrivate) {
+    public UserApplication(long id, String name, String description, String apiKey, String apiPrivate, String owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.API_KEY = apiKey;
         this.API_PRIVATE = apiPrivate;
+        this.owner = owner;
     }
 
     public long getId() {
@@ -42,5 +44,9 @@ public class UserApplication {
 
     public String getAPI_PRIVATE() {
         return API_PRIVATE;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 }
