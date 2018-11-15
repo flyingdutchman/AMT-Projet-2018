@@ -93,7 +93,7 @@ public class UsersManager implements UsersManagerLocal {
     @Override
     public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException {
         Message message = new MimeMessage(mailSession);
-        message.setSubject("Changing Password Required");
+        message.setSubject(subject);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
         message.setFrom(new InternetAddress("adamtprojectmin@gmail.com"));
         //message.setContent(messageToSend); //uncomment to send html

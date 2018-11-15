@@ -29,5 +29,5 @@ public interface UsersManagerLocal {
     public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName);
     public void deleteUserAccount(String email);
     public Map<String, UserApplication> getApplicationList(String email);
-    public void sendEmail(String mailTo, String messageToSend) throws MessagingException, UnsupportedEncodingException;
+    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException;
 }
