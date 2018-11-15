@@ -44,6 +44,9 @@ public class UsersManager implements UsersManagerLocal {
     @Resource(lookup = "AMT_DB")
     private DataSource database;
 
+    @Resource(name = "java/mail/swhp")
+    Session mailSession;
+
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().equals(CHECK_RIGHT);
