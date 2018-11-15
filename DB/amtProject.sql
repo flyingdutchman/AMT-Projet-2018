@@ -50,5 +50,6 @@ CREATE TABLE `application` (
 CREATE TABLE `blacklist` (
   `idBlackList` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `fk_userEmail` varchar(45) NOT NULL, 
-  PRIMARY KEY (`idBlackList`)
+  PRIMARY KEY (`idBlackList`),
+  CONSTRAINT FK_UserBlacklistId FOREIGN KEY (`fk_userEmail`) REFERENCES User(`email`)
 );

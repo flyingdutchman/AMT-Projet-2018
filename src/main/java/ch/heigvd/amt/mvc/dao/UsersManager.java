@@ -36,10 +36,6 @@ public class UsersManager implements UsersManagerLocal {
                                             "SET email=?, password=?, lastName=?, firstName=? " +
                                             "WHERE email=?";
     private final String QUERY_DELETE_USER= "DELETE FROM user WHERE email=?";
-//    private final String QUERY_GET_ADMINS = QUERY_GET_ALL_USERS +
-//                                            "WHERE `right`='ADMIN'";
-//    private final String QUERY_GET_INSERTED_USER = QUERY_GET_ALL_USERS +
-//                                                   "WHERE `right`='DEVELOPER' && email=?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -126,12 +122,8 @@ public class UsersManager implements UsersManagerLocal {
         String oldPassword = user.getPassword();
         String oldLastName = user.getLastName();
         String oldFirstName = user.getFirstName();
-        System.out.println("Before update");
-        System.out.println("Old values: oldEmail - " + oldEmail + "oldPassword - " + oldPassword + "oldLastName - " + oldLastName + "oldFirstName - " + oldFirstName);
         try(Connection connection = database.getConnection()) {
-            System.out.println("Connection...");
             PreparedStatement updateStatement = connection.prepareStatement(QUERY_UPDATE_USER);
-            System.out.println("Connected");
             int count = 0;
             checkOldValues(oldEmail, email, updateStatement, ++count);
             checkOldValues(oldPassword, password, updateStatement, ++count);
@@ -148,10 +140,8 @@ public class UsersManager implements UsersManagerLocal {
 
     private void checkOldValues(String oldValue, String newValue, PreparedStatement updatePrepStat, int i) throws SQLException {
         if(!newValue.isEmpty() && !oldValue.equals(newValue)) {
-            System.out.println("Changed: " + newValue);
             updatePrepStat.setString(i, newValue);
         }else {
-            System.out.println("Same as before: " + oldValue);
             updatePrepStat.setString(i, oldValue);
         }
     }
