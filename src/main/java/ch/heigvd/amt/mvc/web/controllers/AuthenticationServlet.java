@@ -5,6 +5,7 @@ import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

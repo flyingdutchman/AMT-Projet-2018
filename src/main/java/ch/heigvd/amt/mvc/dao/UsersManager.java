@@ -4,10 +4,17 @@ import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
+import javax.mail.Message;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +43,9 @@ public class UsersManager implements UsersManagerLocal {
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
+
+    @Resource(name = "java/mail/swhp")
+    Session mailSession;
 
 //    public void init() {
 //
@@ -78,6 +88,17 @@ public class UsersManager implements UsersManagerLocal {
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().equals(CHECK_RIGHT);
+    }
+
+    @Override
+    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException {
+        Message message = new MimeMessage(mailSession);
+        message.setSubject("Changing Password Required");
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
+        message.setFrom(new InternetAddress("adamtprojectmin@gmail.com"));
+        //message.setContent(messageToSend); //uncomment to send html
+        message.setText(messageToSend); //uncomment to send plaintext
+        Transport.send(message);
     }
 
     @Override
