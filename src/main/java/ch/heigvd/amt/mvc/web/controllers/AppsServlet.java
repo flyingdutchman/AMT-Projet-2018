@@ -28,7 +28,10 @@ public class AppsServlet extends HttpServlet {
         if (appId == null) {
             User user = (User) request.getSession().getAttribute("user");
             Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
-            request.setAttribute("app_list", appList);
+            if(appList != null)
+                request.setAttribute("app_list", appList.values());
+            else
+                request.setAttribute("app_list", null);
             request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
         } else {
             UserApplication application = appManager.getApplication(appId);
