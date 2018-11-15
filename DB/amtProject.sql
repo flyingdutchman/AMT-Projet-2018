@@ -1,6 +1,6 @@
 -- DROP TABLE IF EXISTS `userApplication`;
-DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `application`;
+DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `blacklist`;
 
 --

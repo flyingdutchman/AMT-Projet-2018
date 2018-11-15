@@ -1,3 +1,5 @@
+USE amt_db;
+
 INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`, `right`)
 		VALUES ('moi@patate.ch', 'patate', 'Gonzalez', 'Nathan', 'ADMIN');
         

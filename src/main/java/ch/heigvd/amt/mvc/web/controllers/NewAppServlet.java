@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 @WebServlet(name = "NewAppServlet", urlPatterns = {"/apps/new"})
@@ -20,17 +21,14 @@ public class NewAppServlet extends HttpServlet {
   @EJB
   UserApplicationManagerLocal appManager;
 
-  @EJB
-  UsersManagerLocal userManager;
-
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String appName = request.getParameter("appName");
     String appDescription = request.getParameter("appDescription");
     User user = (User) request.getSession().getAttribute("user");
 
     UserApplication appCreated = appManager.createApplication(user.getEmail(), appName, appDescription);
-    Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
-    request.setAttribute("app_list", appList.values());
+    ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
+    request.setAttribute("app_list", appList);
     request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
   }
 

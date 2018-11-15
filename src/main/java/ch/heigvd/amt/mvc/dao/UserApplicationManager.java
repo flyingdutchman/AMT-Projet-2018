@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -19,11 +20,11 @@ import java.util.UUID;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UserApplicationManager implements UserApplicationManagerLocal {
 
-    private final String QUERY_INSERT_APP = "INSERT INTO application (name, description,  api_key, api_secret, owner) " +
+    private final String QUERY_INSERT_APP = "INSERT INTO application (`name`, description,  api_key, api_secret, owner) " +
                                             "VALUES (?, ?, ?, ?, ?)";
-    private final String QUERY_GET_APP = "SELECT idApplication, name, description, api_key, api_secret FROM application";
+    private final String QUERY_GET_APP = "SELECT * FROM application";
     private final String QUERY_GET_LAST_APP = "SELECT LAST_INSERT_ID()";
-    private final String QUERY_GET_APPS_FROM_USER = "SELECT idApplication, name, description, api_key, api_secret FROM application WHERE email = ?";
+    private final String QUERY_GET_APPS_FROM_USER = "SELECT * FROM application WHERE owner = ?";
     private final String QUERY_UPDATE_APP= "UPDATE application " +
                                            "SET name=?, description=? " +
                                            "WHERE id=?";
@@ -55,13 +56,23 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
     }
 
     @Override
-    public Map<String, UserApplication> getApplicationList(String owner) {
+    public ArrayList<UserApplication> getApplicationList(String owner) {
         try(Connection connection = database.getConnection()) {
             PreparedStatement getAppPrepStat = connection.prepareStatement(QUERY_GET_APPS_FROM_USER);
+            getAppPrepStat.setString(1, owner);
             ResultSet rs = getAppPrepStat.executeQuery();
-            Map<String, UserApplication> userApplications = new HashMap<>();
+            ArrayList<UserApplication> userApplications = new ArrayList<>();
             while(rs.next()) {
-                userApplications.put(owner, getApplication(rs.getLong(1)));
+                UserApplication ua = new UserApplication(
+                    rs.getInt(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6)
+                );
+                System.out.println(ua);
+                userApplications.add(ua);
             }
             return userApplications;
 

@@ -71,7 +71,7 @@ public class AuthenticationServlet extends HttpServlet {
     /*
      When the user is not logged in yet and tries to access /pages/xxx, then he
      is redirected to the login page by the security filter. The security filter
-     stores the targer url (/pages/xxx) in the request context, so that we can
+     stores the target url (/pages/xxx) in the request context, so that we can
      send redirect the user to the desired location after successful authentication.
     
      If the user accessed /auth directly and there is no targetUrl, then we send him

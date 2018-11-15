@@ -156,15 +156,4 @@ public class UsersManager implements UsersManagerLocal {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public Map<String, UserApplication> getApplicationList(String email) {
-        Map<String, UserApplication> userApplications;
-        User user = getUserByMail(email);
-        if(user == null) {
-            return null;
-        }
-        userApplications = user.getApplicationList();
-        return userApplications;
-    }
 }
