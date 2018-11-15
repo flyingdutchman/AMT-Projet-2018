@@ -27,7 +27,7 @@ import java.util.Map;
 public class UsersManager implements UsersManagerLocal {
     private final String CHECK_RIGHT = "ADMIN";
 
-    private final String QUERY_GET_ALL_USERS = "SELECT * FROM `user` ";
+    private final String QUERY_GET_ALL_USERS = "SELECT * FROM user ";
     private final String QUERY_GET_USER_BY_MAIL = QUERY_GET_ALL_USERS +
                                                   "WHERE email=?";
     private final String QUERY_INSERT_USER = "INSERT INTO user (email, password, lastName, firstName) " +
@@ -36,10 +36,6 @@ public class UsersManager implements UsersManagerLocal {
                                             "SET email=?, password=?, lastName=?, firstName=? " +
                                             "WHERE email=?";
     private final String QUERY_DELETE_USER= "DELETE FROM user WHERE email=?";
-//    private final String QUERY_GET_ADMINS = QUERY_GET_ALL_USERS +
-//                                            "WHERE `right`='ADMIN'";
-//    private final String QUERY_GET_INSERTED_USER = QUERY_GET_ALL_USERS +
-//                                                   "WHERE `right`='DEVELOPER' && email=?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -47,44 +43,6 @@ public class UsersManager implements UsersManagerLocal {
     @Resource(name = "java/mail/swhp")
     Session mailSession;
 
-//    public void init() {
-//
-//        if(!once) {
-//            try (Connection connection = database.getConnection()) {
-//                System.out.println("Before insertion");
-//                PreparedStatement statementBegin = connection.prepareStatement(QUERY_GET_ADMINS);
-//                ResultSet rs = statementBegin.executeQuery();
-//                rs.next();
-//                users.add(new User(rs.getString(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5),
-//                        null));
-//                System.out.println("End insert 1");
-//                rs.next();
-//                users.add(new User(rs.getString(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5),
-//                        null));
-//                System.out.println("End insert 2");
-//                rs.next();
-//                users.add(new User(rs.getString(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getString(5),
-//                        null));
-//                System.out.println("End insert 3");
-//                System.out.println("User 1: " + users.get(0).getEmail() + " User 2: " + users.get(1).getEmail() + " User 3: " + users.get(2).getEmail());
-//                once = true;
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().equals(CHECK_RIGHT);
@@ -143,7 +101,7 @@ public class UsersManager implements UsersManagerLocal {
 
     @Override
     public User createAccount(String email, String password, String lastName, String firstName) throws RuntimeException {
-        //updateAccount("truc@lautre.ch", "chose@lautre.ch", "chose", "Yehei", "");
+        updateAccount("a@b.ab", "asdf@asdf.asdf", "asdf", "", "Yey");
         try(Connection connection = database.getConnection()) {
             PreparedStatement insertPrepState = connection.prepareStatement(QUERY_INSERT_USER);
             insertPrepState.setString(1, email);
@@ -164,32 +122,14 @@ public class UsersManager implements UsersManagerLocal {
         String oldPassword = user.getPassword();
         String oldLastName = user.getLastName();
         String oldFirstName = user.getFirstName();
-        System.out.println("Before update");
-        System.out.println("Old values: oldEmail - " + oldEmail + "oldPassword - " + oldPassword + "oldLastName - " + oldLastName + "oldFirstName - " + oldFirstName);
         try(Connection connection = database.getConnection()) {
-            System.out.println("Connection...");
             PreparedStatement updateStatement = connection.prepareStatement(QUERY_UPDATE_USER);
-            System.out.println("Connected");
-            int count = 1;
-            System.out.println("Change email: " + count);
-            System.out.println("Old email: " + oldEmail + ", New email: " + email);
-            checkOldValues(oldEmail, email, updateStatement, count);
-            ++count;
-            System.out.println("Change password: " + count);
-            System.out.println("Old password: " + oldPassword + ", New password: " + password);
-            checkOldValues(oldPassword, password, updateStatement, count);
-            ++count;
-            System.out.println("Change lastName: " + count);
-            System.out.println("Old lastName: " + oldLastName + ", New lastName: " + lastName);
-            checkOldValues(oldLastName, lastName, updateStatement, count);
-            ++count;
-            System.out.println("Change firstName: " + count);
-            System.out.println("Old firstName: " + oldFirstName + ", New firstName: " + firstName);
-            checkOldValues(oldFirstName, firstName, updateStatement, count);
-            ++count;
-            System.out.println("Insert which mail " + count);
-            System.out.println("Who we want to change attributes: " + oldEmail);
-            updateStatement.setString(count, oldEmail);
+            int count = 0;
+            checkOldValues(oldEmail, email, updateStatement, ++count);
+            checkOldValues(oldPassword, password, updateStatement, ++count);
+            checkOldValues(oldLastName, lastName, updateStatement, ++count);
+            checkOldValues(oldFirstName, firstName, updateStatement, ++count);
+            updateStatement.setString(++count, oldEmail);
 
             updateStatement.executeUpdate();
         } catch (SQLException e) {
@@ -200,10 +140,8 @@ public class UsersManager implements UsersManagerLocal {
 
     private void checkOldValues(String oldValue, String newValue, PreparedStatement updatePrepStat, int i) throws SQLException {
         if(!newValue.isEmpty() && !oldValue.equals(newValue)) {
-            System.out.println("Changed: " + newValue);
             updatePrepStat.setString(i, newValue);
         }else {
-            System.out.println("Same as before: " + oldValue);
             updatePrepStat.setString(i, oldValue);
         }
     }
@@ -217,16 +155,5 @@ public class UsersManager implements UsersManagerLocal {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Map<String, UserApplication> getApplicationList(String email) {
-        Map<String, UserApplication> userApplications;
-        User user = getUserByMail(email);
-        if(user == null) {
-            return null;
-        }
-        userApplications = user.getApplicationList();
-        return userApplications;
     }
 }

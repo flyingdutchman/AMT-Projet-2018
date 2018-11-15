@@ -9,7 +9,6 @@ public class User {
     private String password;
     private String lastName;
     private String firstName;
-    private Map<String, UserApplication> applicationList;
     private boolean inBlacklist = false;
 
     public User(String email,
@@ -58,14 +57,6 @@ public class User {
 
     public boolean isInBlacklist() {
         return inBlacklist;
-    }
-
-    public Map<String, UserApplication> getApplicationList() {
-        return applicationList;
-    }
-
-    public void setApplicationList(String email, UserApplication apk) {
-        this.applicationList.put(email, apk);
     }
 
     public String getRight() {

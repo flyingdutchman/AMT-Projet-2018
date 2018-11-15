@@ -20,9 +20,10 @@
       <div class="card mb-3">
         <div class="card-header">
           <i class="fas fa-table"></i>
-          Data Table Example
+          App List
         </div>
         <div class="card-body">
+          <a class="btn btn-outline-primary mb-4" href="apps/new">New App</a>
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
@@ -31,8 +32,8 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Active</th>
-                <th>Active</th>
-                <th>Active</th>
+                <th>Api Key</th>
+                <th></th>
               </tr>
               </thead>
               <tfoot>
@@ -42,6 +43,7 @@
                 <th>Description</th>
                 <th>Active</th>
                 <th>Api Key</th>
+                <th></th>
               </tr>
               </tfoot>
               <tbody>
@@ -56,6 +58,11 @@
                   <td><%=ua.getDescription()%></td>
                   <td>False</td>
                   <td><%=ua.getAPI_KEY()%></td>
+                  <td>
+                    <form action="apps" method="post">
+                      <button name="delete" value="<%=ua.getId()%>" class="btn btn-default fas fa-trash-alt"></button>
+                    </form>
+                  </td>
                 </tr>
               <% }}%>
 
@@ -63,13 +70,11 @@
             </table>
           </div>
         </div>
-        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        <%--<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>--%>
       </div>
 
+    </div> <!-- End Container Fluid -->
 
-
-
-    </div>
 
     <!-- Sticky Footer -->
     <footer class="sticky-footer">

@@ -12,29 +12,41 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 @WebServlet(name = "AppsServlet", urlPatterns = {"/apps"})
 public class AppsServlet extends HttpServlet {
 
     @EJB
-    UsersManagerLocal userManager;
-
-    @EJB
     UserApplicationManagerLocal appManager;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer appId = (Integer) request.getAttribute("id");
-        if (appId == null) {
-            User user = (User) request.getSession().getAttribute("user");
-            Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
-            if(appList != null)
-                request.setAttribute("app_list", appList.values());
-            request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
-        } else {
+        Long appId = (Long)request.getAttribute("id");
+        if (appId != null) {
             UserApplication application = appManager.getApplication(appId);
             request.setAttribute("application", application);
             request.getRequestDispatcher("/WEB-INF/pages/app.jsp").forward(request, response);
+        } else {
+            updateView(request, response);
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("POST");
+        Long appId = Long.parseLong(request.getParameter("delete"));
+        System.out.println("APPID : "+appId);
+        User user = (User) request.getSession().getAttribute("user");
+        System.out.println("USER : "+user);
+        appManager.deleteApplication(appId, user.getEmail());
+        updateView(request, response);
+    }
+
+    void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
+        if(appList != null)
+            request.setAttribute("app_list", appList);
+        request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
     }
 }
