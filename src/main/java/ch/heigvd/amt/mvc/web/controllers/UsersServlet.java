@@ -1,6 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UsersManager;
+import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
@@ -14,16 +14,16 @@ import java.io.IOException;
 @WebServlet(name = "UsersServlet", urlPatterns = {"/users"})
 public class UsersServlet extends HttpServlet {
 
-    @EJB
-    UsersManager userManager;
+  @EJB
+  UsersManagerLocal userManager;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User)request.getSession().getAttribute("user");
-        if(!userManager.isAdmin(user)) {
-            response.setStatus(403);
-        } else {
-            request.setAttribute("users", userManager.getAllUsers());
-        }
-        request.getRequestDispatcher("/WEB-INF/pages/users.jsp").forward(request, response);
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    User currentUser = (User) request.getSession().getAttribute("user");
+    if (!userManager.isAdmin(currentUser)) {
+      response.setStatus(403);
+    } else {
+      request.setAttribute("users", userManager.getAllUsers().values());
     }
+    request.getRequestDispatcher("/WEB-INF/pages/users.jsp").forward(request, response);
+  }
 }

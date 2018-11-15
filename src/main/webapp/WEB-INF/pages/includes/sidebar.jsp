@@ -1,3 +1,4 @@
+<%@ page import="ch.heigvd.amt.mvc.model.User" %>
 <!-- Sidebar -->
 <ul class="sidebar navbar-nav">
     <li class="nav-item">
@@ -37,9 +38,16 @@
         <i class="fas fa-fw fa-th-list"></i>
         <span>Apps</span></a>
     </li>
+    <%
+      User currentUser = (User) request.getSession().getAttribute("user");
+      if(currentUser.getRight().equals("ADMIN")) {
+    %>
     <li class="nav-item">
         <a class="nav-link" href="users">
             <i class="fas fa-fw fa-users-cog"></i>
             <span>Users</span></a>
     </li>
+    <%
+      }
+    %>
 </ul>
