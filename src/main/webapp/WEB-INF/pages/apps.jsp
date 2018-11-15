@@ -33,6 +33,7 @@
                 <th>Description</th>
                 <th>Active</th>
                 <th>Api Key</th>
+                <th></th>
               </tr>
               </thead>
               <tfoot>
@@ -42,6 +43,7 @@
                 <th>Description</th>
                 <th>Active</th>
                 <th>Api Key</th>
+                <th></th>
               </tr>
               </tfoot>
               <tbody>
@@ -56,6 +58,11 @@
                   <td><%=ua.getDescription()%></td>
                   <td>False</td>
                   <td><%=ua.getAPI_KEY()%></td>
+                  <td>
+                    <form action="apps" method="post">
+                      <button name="delete" value="<%=ua.getId()%>" class="btn btn-default fas fa-trash-alt"></button>
+                    </form>
+                  </td>
                 </tr>
               <% }}%>
 

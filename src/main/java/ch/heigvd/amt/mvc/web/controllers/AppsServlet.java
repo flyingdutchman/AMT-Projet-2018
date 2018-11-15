@@ -23,16 +23,30 @@ public class AppsServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long appId = (Long)request.getAttribute("id");
-        if (appId == null) {
-            User user = (User) request.getSession().getAttribute("user");
-            ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
-            if(appList != null)
-                request.setAttribute("app_list", appList);
-            request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
-        } else {
+        if (appId != null) {
             UserApplication application = appManager.getApplication(appId);
             request.setAttribute("application", application);
             request.getRequestDispatcher("/WEB-INF/pages/app.jsp").forward(request, response);
+        } else {
+            updateView(request, response);
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("POST");
+        Long appId = Long.parseLong(request.getParameter("delete"));
+        System.out.println("APPID : "+appId);
+        User user = (User) request.getSession().getAttribute("user");
+        System.out.println("USER : "+user);
+        appManager.deleteApplication(appId, user.getEmail());
+        updateView(request, response);
+    }
+
+    void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) request.getSession().getAttribute("user");
+        ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
+        if(appList != null)
+            request.setAttribute("app_list", appList);
+        request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
     }
 }

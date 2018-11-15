@@ -20,15 +20,15 @@ import java.util.UUID;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UserApplicationManager implements UserApplicationManagerLocal {
 
-    private final String QUERY_INSERT_APP = "INSERT INTO application (`name`, description,  api_key, api_secret, owner) " +
+    private final String QUERY_INSERT_APP = "INSERT INTO `application` (`name`, `description`,  `api_key`, `api_secret`, `owner`) " +
                                             "VALUES (?, ?, ?, ?, ?)";
-    private final String QUERY_GET_APP = "SELECT * FROM application";
+    private final String QUERY_GET_APP = "SELECT * FROM `application`";
     private final String QUERY_GET_LAST_APP = "SELECT LAST_INSERT_ID()";
-    private final String QUERY_GET_APPS_FROM_USER = "SELECT * FROM application WHERE owner = ?";
-    private final String QUERY_UPDATE_APP= "UPDATE application " +
-                                           "SET name=?, description=? " +
-                                           "WHERE id=?";
-    private final String QUERY_DELETE_APP = "DELETE FROM application WHERE idApplication = ? AND owner = ?";
+    private final String QUERY_GET_APPS_FROM_USER = "SELECT * FROM `application` WHERE `owner` = ?";
+    private final String QUERY_UPDATE_APP= "UPDATE `application` " +
+                                           "SET `name`=?, description=? " +
+                                           "WHERE `id`=?";
+    private final String QUERY_DELETE_APP = "DELETE FROM `application` WHERE `idApplication` = ? AND `owner` = ?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -71,7 +71,6 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
                     rs.getString(5),
                     rs.getString(6)
                 );
-                System.out.println(ua);
                 userApplications.add(ua);
             }
             return userApplications;
@@ -152,10 +151,11 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
 
     @Override
     public void deleteApplication(long id, String owner) {
+        System.out.println("YO DELETE "+id+" FOR "+owner);
         try(Connection connection = database.getConnection()) {
             PreparedStatement statement2 = connection.prepareStatement(QUERY_DELETE_APP);
             statement2.setLong(1, id);
-            statement2.setString(1, owner);
+            statement2.setString(2, owner);
             statement2.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
