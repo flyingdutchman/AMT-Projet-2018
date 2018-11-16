@@ -39,7 +39,7 @@
               </div>
             </div>
             <input type="hidden" name="action" value="login">
-            <button class="btn btn-lg btn-primary btn-block" id="btnCreate" type="submit">Create</button>
+            <button class="btn btn-lg btn-primary btn-block mb-3" id="btnCreate" type="submit">Create</button>
           </form>
         </div>
       </div>

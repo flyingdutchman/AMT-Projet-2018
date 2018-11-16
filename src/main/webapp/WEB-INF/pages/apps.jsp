@@ -59,14 +59,14 @@
                   <td>False</td>
                   <td><%=ua.getAPI_KEY()%></td>
                   <td>
-                    <form action="apps" method="post">
-                      <button name="delete" value="<%=ua.getId()%>" class="btn btn-default fas fa-trash-alt"></button>
-                    </form>
-                  </td>
-                  <td>
-                    <form action="apps" method="post">
-                      <button name="edit" value="<%=ua.getId()%>" class="btn btn-default fas fa-edit"></button>
-                    </form>
+                    <div class="row" style="margin:auto">
+                      <form action="apps" method="post">
+                        <button name="delete" value="<%=ua.getId()%>" class="btn btn-default fas fa-trash-alt"></button>
+                      </form>
+                      <form action="apps" method="post">
+                        <button name="edit" value="<%=ua.getId()%>" class="btn btn-default fas fa-edit"></button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               <% }}%>

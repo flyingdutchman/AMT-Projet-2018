@@ -29,7 +29,7 @@ public class NewAppServlet extends HttpServlet {
     UserApplication appCreated = appManager.createApplication(user.getEmail(), appName, appDescription);
     ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
     request.setAttribute("app_list", appList);
-    request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
+    response.sendRedirect("../apps");
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
