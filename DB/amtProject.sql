@@ -1,3 +1,7 @@
+DROP SCHEMA IF EXISTS `amt_db`;
+CREATE SCHEMA `amt_db`;
+USE `amt_db`;
+
 -- DROP TABLE IF EXISTS `userApplication`;
 DROP TABLE IF EXISTS `application`;
 DROP TABLE IF EXISTS `user`;
