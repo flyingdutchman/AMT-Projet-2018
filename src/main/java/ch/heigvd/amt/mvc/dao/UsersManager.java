@@ -1,13 +1,12 @@
 package ch.heigvd.amt.mvc.dao;
 
 import ch.heigvd.amt.mvc.model.User;
-import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
-import javax.mail.Message;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
