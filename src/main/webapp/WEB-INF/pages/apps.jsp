@@ -63,6 +63,11 @@
                       <button name="delete" value="<%=ua.getId()%>" class="btn btn-default fas fa-trash-alt"></button>
                     </form>
                   </td>
+                  <td>
+                    <form action="apps" method="post">
+                      <button name="edit" value="<%=ua.getId()%>" class="btn btn-default fas fa-edit"></button>
+                    </form>
+                  </td>
                 </tr>
               <% }}%>
 

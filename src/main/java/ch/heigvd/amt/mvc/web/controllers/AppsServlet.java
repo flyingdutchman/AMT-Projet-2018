@@ -22,24 +22,39 @@ public class AppsServlet extends HttpServlet {
     UserApplicationManagerLocal appManager;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long appId = (Long)request.getAttribute("id");
+        Integer appId = (Integer)request.getAttribute("id");
         if (appId != null) {
             UserApplication application = appManager.getApplication(appId);
             request.setAttribute("application", application);
-            request.getRequestDispatcher("/WEB-INF/pages/app.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/apps.jsp").forward(request, response);
         } else {
             updateView(request, response);
         }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("POST");
-        Long appId = Long.parseLong(request.getParameter("delete"));
-        System.out.println("APPID : "+appId);
+        Integer appId;
+        Integer appIdEdit;
+        try {
+            appId = Integer.parseInt(request.getParameter("delete"));
+        } catch (java.lang.NumberFormatException ex) {
+            appId = null;
+        }
+        try {
+            appIdEdit = Integer.parseInt(request.getParameter("edit"));
+        } catch (java.lang.NumberFormatException ex) {
+            appIdEdit = null;
+        }
+
         User user = (User) request.getSession().getAttribute("user");
-        System.out.println("USER : "+user);
-        appManager.deleteApplication(appId, user.getEmail());
-        updateView(request, response);
+        if (appIdEdit != null) {
+            response.sendRedirect("./edit?id=" + appIdEdit);
+        } else if (appId != null) {
+            appManager.deleteApplication(appId, user.getEmail());
+            updateView(request, response);
+        } else {
+            updateView(request, response);
+        }
     }
 
     void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -4,12 +4,12 @@ public class UserApplication {
     private final String API_KEY;
     private final String API_PRIVATE;
 
-    private long id;
+    private int id;
     private String name;
     private String description;
     private String owner;
 
-    public UserApplication(long id, String name, String description, String apiKey, String apiPrivate, String owner) {
+    public UserApplication(int id, String name, String description, String apiKey, String apiPrivate, String owner) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -18,7 +18,7 @@ public class UserApplication {
         this.owner = owner;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
