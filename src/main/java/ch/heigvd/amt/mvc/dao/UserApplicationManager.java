@@ -42,7 +42,7 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
     // Query that deletes all the information of one application
     private final String QUERY_DELETE_APP = "DELETE FROM `application` WHERE `idApplication` = ? AND `owner` = ?";
 
-    @Resource(lookup = "amt_db")
+    @Resource(lookup = "AMT_DB")
     private DataSource database;
 
     @Override

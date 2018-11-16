@@ -54,7 +54,7 @@ public class UsersManager implements UsersManagerLocal {
     private final String QUERY_DELETE_USER      = "DELETE FROM user WHERE email=?";
 
     // Connection to the database
-    @Resource(lookup = "amt_db")
+    @Resource(lookup = "AMT_DB")
     private DataSource database;
 
     // Allows to send mails
