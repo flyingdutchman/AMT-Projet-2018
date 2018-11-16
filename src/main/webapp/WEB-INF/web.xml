@@ -2,7 +2,7 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <filter>
         <filter-name>SecurityFilter</filter-name>
-        <filter-class>ch.heigvd.amt.mvcdemo.web.filters.SecurityFilter</filter-class>
+        <filter-class>ch.heigvd.amt.mvc.web.filters.SecurityFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
@@ -10,27 +10,19 @@
     </filter-mapping>
     <servlet>
         <servlet-name>AuthenticationServlet</servlet-name>
-        <servlet-class>ch.heigvd.amt.mvcdemo.web.controllers.AuthenticationServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>BeersServlet</servlet-name>
-        <servlet-class>ch.heigvd.amt.mvcdemo.web.controllers.BeersServlet</servlet-class>
+        <servlet-class>ch.heigvd.amt.mvc.web.controllers.AuthenticationServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>ch.heigvd.amt.mvcdemo.web.controllers.HomeServlet</servlet-class>
+        <servlet-class>ch.heigvd.amt.mvc.web.controllers.HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AuthenticationServlet</servlet-name>
         <url-pattern>/auth</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BeersServlet</servlet-name>
-        <url-pattern>/pages/beers</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/pages/home</url-pattern>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

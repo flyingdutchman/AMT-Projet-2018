@@ -9,4 +9,4 @@ This is one of the methods available to us.
 --%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
-<c:redirect url="/pages/home"/>
+<c:redirect url="/home"/>
