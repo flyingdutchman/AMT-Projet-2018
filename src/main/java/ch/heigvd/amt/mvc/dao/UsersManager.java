@@ -37,6 +37,7 @@ public class UsersManager implements UsersManagerLocal {
                                              "WHERE `email`=?";
     private final String QUERY_DELETE_USER = "DELETE FROM user WHERE email=?";
     private final String QUERY_SET_ISBANNED = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
+    private final String QUERY_SET_RIGHT = "UPDATE `user` SET `right` = ? WHERE `email` = ?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -169,6 +170,20 @@ public class UsersManager implements UsersManagerLocal {
         try(Connection connection = database.getConnection()) {
             PreparedStatement bannedStatement = connection.prepareStatement(QUERY_SET_ISBANNED);
             bannedStatement.setBoolean(1, isBanned);
+            bannedStatement.setString(2, email);
+            bannedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserRight(String email, String newRights) {
+        System.out.println(newRights);
+        System.out.println(email);
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement bannedStatement = connection.prepareStatement(QUERY_SET_RIGHT);
+            bannedStatement.setString(1, newRights);
             bannedStatement.setString(2, email);
             bannedStatement.executeUpdate();
         } catch (SQLException e) {

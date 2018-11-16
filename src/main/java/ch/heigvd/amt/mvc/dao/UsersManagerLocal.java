@@ -19,4 +19,5 @@ public interface UsersManagerLocal {
     public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName, boolean isBanned);
     public void setUserIsBanned(String email, boolean isBanned);
     public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException;
+    public void setUserRight(String email, String newRights);
 }

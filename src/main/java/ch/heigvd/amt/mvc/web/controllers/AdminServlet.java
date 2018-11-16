@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "AdminServlet", urlPatterns = {"/admin"})
 public class AdminServlet extends HttpServlet {
@@ -28,13 +29,18 @@ public class AdminServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     if(request.getParameter("ban") != null) {
-      System.out.println("BAN");
       String email = request.getParameter("ban");
       userManager.setUserIsBanned(email, true);
     } else if (request.getParameter("unban") != null) {
-      System.out.println("UNBAN");
       String email = request.getParameter("unban");
       userManager.setUserIsBanned(email, false);
+    } else if (request.getParameter("updateRights") != null) {
+      String[] emailAndCount = request.getParameter("updateRights").split(Pattern.quote("|"));
+      String dropDownName = "hiddenFiel" + emailAndCount[1];
+      String newRight = (String)request.getParameter(dropDownName);
+      System.out.println("dropDownName "+newRight);
+      userManager.setUserRight(emailAndCount[0], newRight);
+      request.setAttribute("updateRights", null);
     }
 
     updateView(request, response);
