@@ -45,14 +45,39 @@
               <tbody>
               <%
                 Collection<User> cu = (Collection<User>) request.getAttribute("users");
+                int count=0;
                 if (cu != null) {
               %>
-              <%for (User u : cu) {%>
+              <%for (User u : cu) {count++;%>
               <tr <%if(u.isBanned()){%>style="color:red"<%}%>  >
                 <td><%=u.getEmail()%></td>
                 <td><%=u.getFirstName()%></td>
                 <td><%=u.getLastName()%></td>
-                <td><%=u.getRight()%></td>
+                <td>
+                  <div class = "container">
+                    <select name="rightsOf<%=count%>" class="bootstrap-select" onchange="document.getElementById('hiddenField<%=count%>').value=this.value">
+                      <option value="ADMIN"
+                              <%
+                                if(u.getRight().equals("ADMIN")) {
+                                  %>selected="selected"
+                          <%}%>
+                      >ADMIN</option>
+                      <option value="DEVELOPER"
+                              <%
+                                if(u.getRight().equals("DEVELOPER")) {
+                                  %>selected="selected"
+                          <%}%>
+                      >DEVELOPER</option>
+                    </select>
+                    <%if (u.getEmail() != ((User)request.getSession().getAttribute("user")).getEmail()){ %>
+                    <form action="admin" method="POST" class="form-signin">
+                      <input type='hidden' name="hiddenFiel<%=count%>" id="hiddenField<%=count%>" value="DEV">
+                      <button type="submit" name="updateRights" value="<%=u.getEmail()%>|<%=count%>" data-toggle="tooltip" data-placement="top"
+                              title="Click to change rights" class="btn btn-default fas fa-check-square"></button>
+                    </form>
+                    <%}%>
+                  </div>
+                </td>
                 <td>
                   <div class="row" style="margin:auto">
                     <%

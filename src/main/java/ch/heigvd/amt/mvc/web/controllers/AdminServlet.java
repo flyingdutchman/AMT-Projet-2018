@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import java.io.UnsupportedEncodingException;
 
 @WebServlet(name = "AdminServlet", urlPatterns = {"/admin"})
@@ -35,6 +36,13 @@ public class AdminServlet extends HttpServlet {
     } else if (request.getParameter("unban") != null) {
       String email = request.getParameter("unban");
       userManager.setUserIsBanned(email, false);
+    } else if (request.getParameter("updateRights") != null) {
+      String[] emailAndCount = request.getParameter("updateRights").split(Pattern.quote("|"));
+      String dropDownName = "hiddenFiel" + emailAndCount[1];
+      String newRight = (String)request.getParameter(dropDownName);
+      System.out.println("dropDownName "+newRight);
+      userManager.setUserRight(emailAndCount[0], newRight);
+      request.setAttribute("updateRights", null);
     } else if (request.getParameter("resetMail") != null) {
       System.out.println("RESET MAIL");
       String email = request.getParameter("resetMail");
