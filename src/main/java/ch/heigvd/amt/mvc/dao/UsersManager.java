@@ -21,43 +21,49 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class is used to manage the Users's accounts, and to know the information about them, as their rights, if
+ * they are banned, etc.
+ * @author Nathan Gonzalez, Jimmy Verdasca, Mika Pagani
+ */
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class UsersManager implements UsersManagerLocal {
-    private final String CHECK_RIGHT = "ADMIN";
+    private final String CHECK_RIGHT = "ADMIN"; // Used to chek if the user is an Admin or not
 
-    private final String QUERY_GET_ALL_USERS = "SELECT * FROM user ";
+    /**
+     * Queries used to insert, select, update and delete elements of a user in the database
+     */
+    // Query that returns all the information of all Users
+    private final String QUERY_GET_ALL_USERS    = "SELECT * FROM user ";
+    // Query that returns all the information of one User
     private final String QUERY_GET_USER_BY_MAIL = QUERY_GET_ALL_USERS +
                                                   "WHERE `email`=?";
-    private final String QUERY_INSERT_USER = "INSERT INTO user (`email`, `password`, `lastName`, `firstName`) " +
-                                             "VALUES (?, ?, ?, ?)";
-    private final String QUERY_UPDATE_USER = "UPDATE user " +
-                                             "SET `email`=?, password=?, lastName=?, firstName=? " +
-                                             "WHERE `email`=?";
-    private final String QUERY_DELETE_USER = "DELETE FROM user WHERE email=?";
-    private final String QUERY_SET_ISBANNED = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
-    private final String QUERY_SET_RIGHT = "UPDATE `user` SET `right` = ? WHERE `email` = ?";
+    // Query to inserts the information of a new account into the database
+    private final String QUERY_INSERT_USER      = "INSERT INTO user (`email`, `password`, `lastName`, `firstName`) " +
+                                                  "VALUES (?, ?, ?, ?)";
+    // Query to updates information about User's account
+    private final String QUERY_UPDATE_USER      = "UPDATE user " +
+                                                  "SET `email`=?, password=?, lastName=?, firstName=? " +
+                                                  "WHERE `email`=?";
+    // Query to updates if the user is banned or not
+    private final String QUERY_SET_ISBANNED     = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
+    // Query to updates the right of a User's account
+    private final String QUERY_SET_RIGHT        = "UPDATE `user` SET `right` = ? WHERE `email` = ?";
+    // Query to deletes a User's account
+    private final String QUERY_DELETE_USER      = "DELETE FROM user WHERE email=?";
 
+    // Connection to the database
     @Resource(lookup = "amt_db")
     private DataSource database;
 
+    // Allows to send mails
     @Resource(name = "java/mail/swhp")
     Session mailSession;
 
     @Override
     public boolean isAdmin(User user) {
         return user.getRight().equals(CHECK_RIGHT);
-    }
-
-    @Override
-    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException {
-        Message message = new MimeMessage(mailSession);
-        message.setSubject(subject);
-        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
-        message.setFrom(new InternetAddress("adamtprojectmin@gmail.com"));
-        //message.setContent(messageToSend); //uncomment to send html
-        message.setText(messageToSend); //uncomment to send plaintext
-        Transport.send(message);
     }
 
     @Override
@@ -98,9 +104,8 @@ public class UsersManager implements UsersManagerLocal {
                     rs.getString("right"),
                     rs.getBoolean("banned")
                 );
-            }else {
-                return null;
             }
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -123,27 +128,8 @@ public class UsersManager implements UsersManagerLocal {
         }
     }
 
-    private void checkOldValues(String oldValue, String newValue, PreparedStatement updatePrepStat, int i) throws SQLException {
-        if(!newValue.isEmpty() && !oldValue.equals(newValue)) {
-            updatePrepStat.setString(i, newValue);
-        }else {
-            updatePrepStat.setString(i, oldValue);
-        }
-    }
-
     @Override
-    public void deleteUserAccount(String email) {
-        try(Connection connection = database.getConnection()) {
-            PreparedStatement statement2 = connection.prepareStatement(QUERY_DELETE_USER);
-            statement2.setString(1, email);
-            statement2.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName, boolean isBanned) {
+    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName) {
         User user = getUserByMail(oldEmail);
         String oldPassword = user.getPassword();
         String oldLastName = user.getLastName();
@@ -160,6 +146,33 @@ public class UsersManager implements UsersManagerLocal {
             updateStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * This private method factorise the update of an account while checking old values
+     * @param oldValue The old value in user's account
+     * @param newValue The new value we want to change if different from the old value
+     * @param updatePrepStat The PreparedStatement used to make the update
+     * @param paramId Where we want to update the value in the query
+     * @throws SQLException
+     */
+    private void checkOldValues(String oldValue, String newValue, PreparedStatement updatePrepStat, int paramId) throws SQLException {
+        if(!newValue.isEmpty() && !oldValue.equals(newValue)) {
+            updatePrepStat.setString(paramId, newValue);
+        }else {
+            updatePrepStat.setString(paramId, oldValue);
+        }
+    }
+
+    @Override
+    public void deleteUserAccount(String email) {
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement statement2 = connection.prepareStatement(QUERY_DELETE_USER);
+            statement2.setString(1, email);
+            statement2.executeUpdate();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -188,5 +201,16 @@ public class UsersManager implements UsersManagerLocal {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException {
+        Message message = new MimeMessage(mailSession);
+        message.setSubject(subject);
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
+        message.setFrom(new InternetAddress("adamtprojectmin@gmail.com"));
+        //message.setContent(messageToSend); //uncomment to send html
+        message.setText(messageToSend); //uncomment to send plaintext
+        Transport.send(message);
     }
 }
