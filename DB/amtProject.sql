@@ -18,6 +18,7 @@ CREATE TABLE `user` (
   `firstName` varchar(45) NOT NULL,
   `right` varchar(9) DEFAULT 'DEVELOPER',
   `banned` bool NOT NULL DEFAULT false,
+  `pwdReset` bool NOT NULL DEFAULT false,
   PRIMARY KEY (`email`)
 );
 

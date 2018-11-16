@@ -56,7 +56,6 @@
                 <td>
                   <div class="row" style="margin:auto">
                     <%
-                      System.out.println("Guy " + u.getEmail() + " " + u.isBanned());
                       if (u.isBanned()) {
                     %>
                     <form action="admin" method="post">

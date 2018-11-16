@@ -1,7 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UserApplicationManagerLocal;
-import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
+import ch.heigvd.amt.mvc.services.UserApplicationManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
 
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
 @WebServlet(name = "NewAppServlet", urlPatterns = {"/apps/new"})
 public class NewAppServlet extends HttpServlet {

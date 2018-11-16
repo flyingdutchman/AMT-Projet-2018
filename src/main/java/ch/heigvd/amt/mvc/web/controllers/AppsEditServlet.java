@@ -1,6 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UserApplicationManagerLocal;
+import ch.heigvd.amt.mvc.services.UserApplicationManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
 
@@ -27,7 +27,6 @@ public class AppsEditServlet extends HttpServlet {
     } catch(java.lang.NumberFormatException ex) {
       appId = null;
     }
-    System.out.println("IDAPPPP " + appId);
     request.setAttribute("appEdit", appManager.getApplication(appId));
     request.getRequestDispatcher("/WEB-INF/pages/appsEdit.jsp").forward(request, response);
 

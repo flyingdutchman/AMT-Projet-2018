@@ -1,7 +1,6 @@
-package ch.heigvd.amt.mvc.dao;
+package ch.heigvd.amt.mvc.services;
 
 import ch.heigvd.amt.mvc.model.User;
-import ch.heigvd.amt.mvc.model.UserApplication;
 
 import javax.annotation.Resource;
 import javax.mail.Message;
@@ -37,6 +36,7 @@ public class UsersManager implements UsersManagerLocal {
                                              "WHERE `email`=?";
     private final String QUERY_DELETE_USER = "DELETE FROM user WHERE email=?";
     private final String QUERY_SET_ISBANNED = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
+    private final String QUERY_SET_PWDRESET = "UPDATE `user` SET `pwdReset` = ? WHERE `email` = ?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -50,7 +50,7 @@ public class UsersManager implements UsersManagerLocal {
     }
 
     @Override
-    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException {
         Message message = new MimeMessage(mailSession);
         message.setSubject(subject);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(mailTo));
@@ -171,6 +171,18 @@ public class UsersManager implements UsersManagerLocal {
             bannedStatement.setBoolean(1, isBanned);
             bannedStatement.setString(2, email);
             bannedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserIdPwdReset(String email, boolean pwdIsReset) {
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement pwdStatement = connection.prepareStatement(QUERY_SET_PWDRESET);
+            pwdStatement.setBoolean(1, pwdIsReset);
+            pwdStatement.setString(2, email);
+            pwdStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

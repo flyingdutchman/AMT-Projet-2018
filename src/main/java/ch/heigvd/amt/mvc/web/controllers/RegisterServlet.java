@@ -1,6 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
+import ch.heigvd.amt.mvc.services.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;

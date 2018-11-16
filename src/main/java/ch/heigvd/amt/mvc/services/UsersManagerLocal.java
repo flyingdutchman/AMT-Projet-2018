@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvc.dao;
+package ch.heigvd.amt.mvc.services;
 
 import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
@@ -18,5 +18,6 @@ public interface UsersManagerLocal {
     public void deleteUserAccount(String email);
     public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName, boolean isBanned);
     public void setUserIsBanned(String email, boolean isBanned);
+    public void setUserIdPwdReset(String email, boolean pwdIsReset);
     public void sendEmail(String mailTo, String subject, String messageToSend) throws MessagingException, UnsupportedEncodingException;
 }

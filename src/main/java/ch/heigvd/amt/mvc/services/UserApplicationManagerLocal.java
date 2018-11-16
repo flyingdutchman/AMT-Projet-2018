@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvc.dao;
+package ch.heigvd.amt.mvc.services;
 
 import ch.heigvd.amt.mvc.model.UserApplication;
 
