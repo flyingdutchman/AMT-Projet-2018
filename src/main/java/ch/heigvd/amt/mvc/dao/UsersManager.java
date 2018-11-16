@@ -29,13 +29,14 @@ public class UsersManager implements UsersManagerLocal {
 
     private final String QUERY_GET_ALL_USERS = "SELECT * FROM user ";
     private final String QUERY_GET_USER_BY_MAIL = QUERY_GET_ALL_USERS +
-                                                  "WHERE email=?";
-    private final String QUERY_INSERT_USER = "INSERT INTO user (email, password, lastName, firstName) " +
+                                                  "WHERE `email`=?";
+    private final String QUERY_INSERT_USER = "INSERT INTO user (`email`, `password`, `lastName`, `firstName`) " +
                                              "VALUES (?, ?, ?, ?)";
-    private final String QUERY_UPDATE_USER= "UPDATE user " +
-                                            "SET email=?, password=?, lastName=?, firstName=? " +
-                                            "WHERE email=?";
-    private final String QUERY_DELETE_USER= "DELETE FROM user WHERE email=?";
+    private final String QUERY_UPDATE_USER = "UPDATE user " +
+                                             "SET `email`=?, password=?, lastName=?, firstName=? " +
+                                             "WHERE `email`=?";
+    private final String QUERY_DELETE_USER = "DELETE FROM user WHERE email=?";
+    private final String QUERY_SET_ISBANNED = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -66,11 +67,15 @@ public class UsersManager implements UsersManagerLocal {
             PreparedStatement getPrepState = connection.prepareStatement(QUERY_GET_ALL_USERS);
             ResultSet rs = getPrepState.executeQuery();
             while(rs.next()) {
-                users.put(rs.getString(1), new User(rs.getString(1),
-                                                                rs.getString(2),
-                                                                rs.getString(3),
-                                                                rs.getString(4),
-                                                                rs.getString(5)));
+                users.put(rs.getString("email"),
+                    new User(
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("lastName"),
+                        rs.getString("firstName"),
+                        rs.getString("right"),
+                        rs.getBoolean("banned")
+                ));
             }
             return users;
         } catch (SQLException e) {
@@ -85,11 +90,14 @@ public class UsersManager implements UsersManagerLocal {
             statement2.setString(1, email);
             ResultSet rs = statement2.executeQuery();
             if(rs.next()) {
-                return new User(rs.getString(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getString(4),
-                                rs.getString(5));
+                return new User(
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("lastName"),
+                    rs.getString("firstName"),
+                    rs.getString("right"),
+                    rs.getBoolean("banned")
+                );
             }else {
                 return null;
             }
@@ -101,7 +109,6 @@ public class UsersManager implements UsersManagerLocal {
 
     @Override
     public User createAccount(String email, String password, String lastName, String firstName) throws RuntimeException {
-        updateAccount("a@b.ab", "asdf@asdf.asdf", "asdf", "", "Yey");
         try(Connection connection = database.getConnection()) {
             PreparedStatement insertPrepState = connection.prepareStatement(QUERY_INSERT_USER);
             insertPrepState.setString(1, email);
@@ -112,28 +119,6 @@ public class UsersManager implements UsersManagerLocal {
 
             return getUserByMail(email);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName) {
-        User user = getUserByMail(oldEmail);
-        String oldPassword = user.getPassword();
-        String oldLastName = user.getLastName();
-        String oldFirstName = user.getFirstName();
-        try(Connection connection = database.getConnection()) {
-            PreparedStatement updateStatement = connection.prepareStatement(QUERY_UPDATE_USER);
-            int count = 0;
-            checkOldValues(oldEmail, email, updateStatement, ++count);
-            checkOldValues(oldPassword, password, updateStatement, ++count);
-            checkOldValues(oldLastName, lastName, updateStatement, ++count);
-            checkOldValues(oldFirstName, firstName, updateStatement, ++count);
-            updateStatement.setString(++count, oldEmail);
-
-            updateStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -154,6 +139,40 @@ public class UsersManager implements UsersManagerLocal {
             statement2.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateAccount(String oldEmail, String email, String password, String lastName, String firstName, boolean isBanned) {
+        User user = getUserByMail(oldEmail);
+        String oldPassword = user.getPassword();
+        String oldLastName = user.getLastName();
+        String oldFirstName = user.getFirstName();
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement updateStatement = connection.prepareStatement(QUERY_UPDATE_USER);
+            int count = 0;
+            checkOldValues(oldEmail, email, updateStatement, ++count);
+            checkOldValues(oldPassword, password, updateStatement, ++count);
+            checkOldValues(oldLastName, lastName, updateStatement, ++count);
+            checkOldValues(oldFirstName, firstName, updateStatement, ++count);
+            updateStatement.setString(++count, oldEmail);
+
+            updateStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setUserIsBanned(String email, boolean isBanned) {
+        try(Connection connection = database.getConnection()) {
+            PreparedStatement bannedStatement = connection.prepareStatement(QUERY_SET_ISBANNED);
+            bannedStatement.setBoolean(1, isBanned);
+            bannedStatement.setString(2, email);
+            bannedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

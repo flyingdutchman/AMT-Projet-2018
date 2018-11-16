@@ -57,7 +57,7 @@ public class AppsServlet extends HttpServlet {
         }
     }
 
-    void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
         if(appList != null)

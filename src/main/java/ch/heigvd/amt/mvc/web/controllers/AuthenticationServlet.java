@@ -1,11 +1,9 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
-import ch.heigvd.amt.mvc.dao.BlacklistManagerLocal;
 import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 
 import javax.ejb.EJB;
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,9 +42,6 @@ public class AuthenticationServlet extends HttpServlet {
 
   @EJB
   UsersManagerLocal userManager;
-
-  @EJB
-  BlacklistManagerLocal blacklistManager;
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -88,8 +83,8 @@ public class AuthenticationServlet extends HttpServlet {
     request.getSession().setAttribute("user", user);
     if (user == null || !user.getPassword().equals(password)) {
       request.setAttribute("error", "Invalid password or mail");
-    } else if (blacklistManager.isUserInBlacklist(user.getEmail())) {
-      request.setAttribute("error", "You have been blacklisted");
+    } else if (user.isBanned()) {
+      request.setAttribute("error", "You have been banned");
     }
 
     boolean errorOccured = request.getAttribute("error") != null;
