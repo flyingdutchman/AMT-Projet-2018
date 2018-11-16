@@ -30,7 +30,7 @@ public class UsersManager implements UsersManagerLocal {
                                             "WHERE email=?";
     private final String QUERY_DELETE_USER= "DELETE FROM user WHERE email=?";
 
-    @Resource(lookup = "AMT_DB")
+    @Resource(lookup = "amt_db")
     private DataSource database;
 
     @Override
@@ -80,7 +80,7 @@ public class UsersManager implements UsersManagerLocal {
 
     @Override
     public User createAccount(String email, String password, String lastName, String firstName) throws RuntimeException {
-        updateAccount("a@b.ab", "asdf@asdf.asdf", "asdf", "", "Yey");
+        //updateAccount("a@b.ab", "asdf@asdf.asdf", "asdf", "", "Yey");
         try(Connection connection = database.getConnection()) {
             PreparedStatement insertPrepState = connection.prepareStatement(QUERY_INSERT_USER);
             insertPrepState.setString(1, email);

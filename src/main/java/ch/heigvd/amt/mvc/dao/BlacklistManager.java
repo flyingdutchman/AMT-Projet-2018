@@ -18,7 +18,7 @@ public class BlacklistManager implements BlacklistManagerLocal {
     private final String QUERY_GET_ALL_BLACKLIST_USERS = "SELECT * FROM blacklist ";
     private final String QUERY_DELETE_USER_FROM_BLACKLIST = "DELETE FROM blacklist WHERE email=?";
 
-    @Resource(lookup = "AMT_DB")
+    @Resource(lookup = "amt_db")
     private DataSource database;
 
     @Override

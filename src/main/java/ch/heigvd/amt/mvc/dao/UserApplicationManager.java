@@ -29,7 +29,7 @@ public class UserApplicationManager implements UserApplicationManagerLocal {
                                            "WHERE id=?";
     private final String QUERY_DELETE_APP = "DELETE FROM application WHERE idApplication = ? AND owner = ?";
 
-    @Resource(lookup = "AMT_DB")
+    @Resource(lookup = "amt_db")
     private DataSource database;
 
     @Override
