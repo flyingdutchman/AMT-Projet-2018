@@ -12,6 +12,9 @@ INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`, `right`)
 INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`)
 		VALUES ('lautre@truc.ch', 'truc', 'Un', 'Yolo');
         
+INSERT INTO `user` (`email`, `password`, `lastName`, `firstName`)
+		VALUES ('mikijonie@gmail.com', '1234', 'Mika', 'Pags');
+        
 INSERT INTO `application` (`name`, `description`, `api_key`, `api_secret`, `owner`)
 		VALUES ('Mamere', 'Je sais pas', 'JAEB9', 'LEJE2J', 'moi@patate.ch');
         

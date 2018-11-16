@@ -43,9 +43,9 @@
       if(currentUser.getRight().equals("ADMIN")) {
     %>
     <li class="nav-item">
-        <a class="nav-link" href="users">
+        <a class="nav-link" href="admin">
             <i class="fas fa-fw fa-users-cog"></i>
-            <span>Users</span></a>
+            <span>Admin</span></a>
     </li>
     <%
       }

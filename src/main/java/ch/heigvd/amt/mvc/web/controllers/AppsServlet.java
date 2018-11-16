@@ -33,16 +33,15 @@ public class AppsServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("POST");
-        Long appId = Long.parseLong(request.getParameter("delete"));
-        System.out.println("APPID : "+appId);
-        User user = (User) request.getSession().getAttribute("user");
-        System.out.println("USER : "+user);
-        appManager.deleteApplication(appId, user.getEmail());
-        updateView(request, response);
+        if(request.getParameter("delete") != null) {
+            Long appId = Long.parseLong(request.getParameter("delete"));
+            User user = (User) request.getSession().getAttribute("user");
+            appManager.deleteApplication(appId, user.getEmail());
+            updateView(request, response);
+        }
     }
 
-    void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void updateView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
         ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
         if(appList != null)
