@@ -1,7 +1,5 @@
 package ch.heigvd.amt.mvc.model;
 
-import java.util.Map;
-
 public class User {
     private final String RIGHT;
 
@@ -9,19 +7,21 @@ public class User {
     private String password;
     private String lastName;
     private String firstName;
-    private Map<String, UserApplication> applicationList;
-    private boolean inBlacklist = false;
+    private boolean isBanned = false;
 
     public User(String email,
                 String password,
                 String lastName,
                 String firstName,
-                String right) {
+                String right,
+                boolean isBanned
+    ) {
         this.email = email;
         this.password = password;
         this.lastName = lastName;
         this.firstName = firstName;
         this.RIGHT = right;
+        this.isBanned = isBanned;
     }
 
     public String getEmail() {
@@ -56,16 +56,8 @@ public class User {
         this.firstName = firstName;
     }
 
-    public boolean isInBlacklist() {
-        return inBlacklist;
-    }
-
-    public Map<String, UserApplication> getApplicationList() {
-        return applicationList;
-    }
-
-    public void setApplicationInList(String email, UserApplication apk) {
-        this.applicationList.put(email, apk);
+    public boolean isBanned() {
+        return isBanned;
     }
 
     public String getRight() {

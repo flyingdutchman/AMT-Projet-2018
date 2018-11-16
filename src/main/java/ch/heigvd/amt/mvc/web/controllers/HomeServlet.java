@@ -1,5 +1,6 @@
 package ch.heigvd.amt.mvc.web.controllers;
 
+import ch.heigvd.amt.mvc.dao.UserApplicationManagerLocal;
 import ch.heigvd.amt.mvc.dao.UsersManagerLocal;
 import ch.heigvd.amt.mvc.model.User;
 import ch.heigvd.amt.mvc.model.UserApplication;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -22,7 +24,7 @@ import java.util.Map;
 public class HomeServlet extends HttpServlet {
 
   @EJB
-  UsersManagerLocal userManager;
+  UserApplicationManagerLocal appManager;
 
   /**
    * Handles the HTTP <code>GET</code> method.
@@ -35,7 +37,7 @@ public class HomeServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
       User user = (User) request.getSession().getAttribute("user");
-      Map<String, UserApplication> appList = userManager.getApplicationList(user.getEmail());
+      ArrayList<UserApplication> appList = appManager.getApplicationList(user.getEmail());
       request.setAttribute("app_list", appList);
       request.getRequestDispatcher("/WEB-INF/pages/home.jsp").forward(request, response);
   }

@@ -30,11 +30,6 @@
 
 <div class="container">
 
-  <div class="alert alert-danger alert-dismissable mt-5">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    The entered email or password is incorrect.
-  </div>
-
   <div class="card card-login mx-auto mt-5">
     <div class="card-header">Register</div>
     <div class="card-body">
@@ -64,7 +59,7 @@
           </div>
         </div>
         <input type="hidden" name="action" value="login">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <button class="btn btn-lg btn-primary btn-block" id="btnRegister" type="submit">Register</button>
       </form>
     </div>
   </div>

@@ -12,6 +12,7 @@ CREATE TABLE `user` (
   `lastName` varchar(45) NOT NULL,
   `firstName` varchar(45) NOT NULL,
   `right` varchar(9) DEFAULT 'DEVELOPER',
+  `banned` bool NOT NULL DEFAULT false,
   PRIMARY KEY (`email`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -34,12 +35,12 @@ CREATE TABLE `application` (
 -- Table `blacklist`
 --
 
-CREATE TABLE `blacklist` (
-  `idBlackList` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `fk_userEmail` varchar(45) NOT NULL, 
-  PRIMARY KEY (`idBlackList`),
-  CONSTRAINT fk_user_blacklist_id FOREIGN KEY (`fk_userEmail`) REFERENCES user(`email`) ON DELETE RESTRICT ON UPDATE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- CREATE TABLE `blacklist` (
+--   `idBlackList` int(10) unsigned NOT NULL AUTO_INCREMENT,
+--   `fk_userEmail` varchar(45) NOT NULL, 
+--   PRIMARY KEY (`idBlackList`),
+--   CONSTRAINT fk_user_blacklist_id FOREIGN KEY (`fk_userEmail`) REFERENCES user(`email`) ON DELETE RESTRICT ON UPDATE CASCADE
+-- )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table `userApplication`
@@ -51,4 +52,15 @@ CREATE TABLE `blacklist` (
 --   CONSTRAINT PK_UserApk PRIMARY KEY (idApk, idUser),
 --   CONSTRAINT FK_UserId FOREIGN KEY (idUser) REFERENCES User(`email`),
 --   CONSTRAINT FK_ApkId FOREIGN KEY (idApk) REFERENCES Application(`idApplication`)
+-- );
+
+--
+-- Table `blacklist`
+--
+
+-- CREATE TABLE `blacklist` (
+--   `idBlackList` int(10) unsigned NOT NULL AUTO_INCREMENT,
+--   `fk_userEmail` varchar(45) NOT NULL, 
+--   PRIMARY KEY (`idBlackList`),
+--   CONSTRAINT FK_UserBlacklistId FOREIGN KEY (`fk_userEmail`) REFERENCES User(`email`)
 -- );

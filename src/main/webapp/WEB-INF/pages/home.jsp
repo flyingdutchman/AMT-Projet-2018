@@ -7,6 +7,12 @@
   <div id="content-wrapper">
 
     <div class="container-fluid">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Home</a>
+        </li>
+        <li class="breadcrumb-item active">Overview</li>
+      </ol>
       <h2>Welcome to the demo app!</h2>
 
       <div class="alert alert-info" role="alert">
