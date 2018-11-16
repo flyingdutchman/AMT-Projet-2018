@@ -54,7 +54,7 @@
                 <td><%=u.getFirstName()%></td>
                 <td><%=u.getLastName()%></td>
                 <td>
-                  <div class = "container">
+                  <div class = "container row">
                     <select name="rightsOf<%=count%>" class="bootstrap-select" onchange="document.getElementById('hiddenField<%=count%>').value=this.value">
                       <option value="ADMIN"
                               <%

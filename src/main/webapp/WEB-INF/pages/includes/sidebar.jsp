@@ -34,7 +34,7 @@
             <%--<span>Tables</span></a>--%>
     <%--</li>--%>
     <li class="nav-item">
-        <a class="nav-link" href="apps">
+        <a id="btnListApp" class="nav-link" href="apps">
         <i class="fas fa-fw fa-th-list"></i>
         <span>Apps</span></a>
     </li>

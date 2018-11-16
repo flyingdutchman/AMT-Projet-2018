@@ -36,11 +36,8 @@ public class UsersManager implements UsersManagerLocal {
                                              "WHERE `email`=?";
     private final String QUERY_DELETE_USER = "DELETE FROM user WHERE email=?";
     private final String QUERY_SET_ISBANNED = "UPDATE `user` SET `banned` = ? WHERE `email` = ?";
-<<<<<<< HEAD:src/main/java/ch/heigvd/amt/mvc/services/UsersManager.java
     private final String QUERY_SET_PWDRESET = "UPDATE `user` SET `pwdReset` = ? WHERE `email` = ?";
-=======
     private final String QUERY_SET_RIGHT = "UPDATE `user` SET `right` = ? WHERE `email` = ?";
->>>>>>> fb-gui:src/main/java/ch/heigvd/amt/mvc/dao/UsersManager.java
 
     @Resource(lookup = "AMT_DB")
     private DataSource database;
@@ -181,14 +178,17 @@ public class UsersManager implements UsersManagerLocal {
     }
 
     @Override
-<<<<<<< HEAD:src/main/java/ch/heigvd/amt/mvc/services/UsersManager.java
     public void setUserIdPwdReset(String email, boolean pwdIsReset) {
-        try(Connection connection = database.getConnection()) {
+        try (Connection connection = database.getConnection()) {
             PreparedStatement pwdStatement = connection.prepareStatement(QUERY_SET_PWDRESET);
             pwdStatement.setBoolean(1, pwdIsReset);
             pwdStatement.setString(2, email);
             pwdStatement.executeUpdate();
-=======
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setUserRight(String email, String newRights) {
         System.out.println(newRights);
         System.out.println(email);
@@ -197,7 +197,6 @@ public class UsersManager implements UsersManagerLocal {
             bannedStatement.setString(1, newRights);
             bannedStatement.setString(2, email);
             bannedStatement.executeUpdate();
->>>>>>> fb-gui:src/main/java/ch/heigvd/amt/mvc/dao/UsersManager.java
         } catch (SQLException e) {
             e.printStackTrace();
         }
