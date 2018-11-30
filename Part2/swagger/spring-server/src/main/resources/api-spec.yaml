@@ -1,25 +1,25 @@
 swagger: '2.0'
 info:
   version: '0.1.0'
-  title: Badges API
+  title: Badge API
   description: An API gamify an application
 host: localhost:8080
 basePath: /api
 schemes:
-  - http
+- http
 paths:
   /badges:
     post:
       description: create a badge
       operationId: createBadge
       consumes:
-        - application/json
+      - application/json
       parameters:
-        - name: badge
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Badge'
+      - name: badge
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Badge'
       responses:
         '201':
           description: created
@@ -29,7 +29,7 @@ paths:
       description: get the list of all badges
       operationId: getBadges
       produces:
-        - application/json
+      - application/json
       responses:
         '200':
           description: success
@@ -46,6 +46,6 @@ definitions:
       image:
         type: string
       type:
-        type: object
+        type: string
       value:
-        type: object
+        type: integer

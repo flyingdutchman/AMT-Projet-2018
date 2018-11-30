@@ -8,7 +8,7 @@ basePath: /api
 schemes:
 - http
 paths:
-  /badge:
+  /badges:
     post:
       description: create a badge
       operationId: createBadge
@@ -36,7 +36,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Badges'
+              $ref: '#/definitions/Badge'
 definitions:
   Badge:
     type: object
@@ -46,6 +46,6 @@ definitions:
       image:
         type: string
       type:
-        type: object
+        type: string
       value:
-        type: object
+        type: integer

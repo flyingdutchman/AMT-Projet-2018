@@ -6,13 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="swagger-spring" />
-      </profile>
-      <profile name="Annotation profile for badgesSpecification" enabled="true">
-        <sourceOutputDir name="../fruits-specs/target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../fruits-specs/target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
         <module name="fruitsSpecification" />
+        <module name="swagger-spring" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
