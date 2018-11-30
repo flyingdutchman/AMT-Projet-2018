@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: '0.1.0'
-  title: Fruits API
-  description: An API to demonstrate Swagger and Spring Boot
+  title: my simple api
+  description: An API to demonstrate Swagger
 host: localhost:8080
 basePath: /api
 schemes:
@@ -46,6 +46,4 @@ definitions:
       colour:
         type: string
       size:
-        type: string
-      weight:
         type: string
