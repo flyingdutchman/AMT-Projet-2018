@@ -3,6 +3,7 @@ FROM payara/server-full:5.183
 MAINTAINER Nathan, Jimmy and Mika
 
 ADD drivers/mysql-connector-java-8.0.12.jar glassfish/lib/
+COPY AMT-Project.war /opt/payara5/deployments/
 
 RUN echo "AS_ADMIN_PASSWORD=admin" > /tmp/paypw.txt && \
 	./bin/asadmin start-domain domain1 && \
