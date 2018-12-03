@@ -47,10 +47,10 @@ public class PointScaleApiController implements PointScaleApi {
         return ResponseEntity.ok(pointScales);
     }
 
-    private PointScaleEntity toPointScaleEntity(PointScale badge) {
+    private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
         PointScaleEntity entity = new PointScaleEntity();
-        entity.setName(badge.getName());
-        entity.setValue(badge.getValue());
+        entity.setName(pointScale.getName());
+        entity.setValue(pointScale.getValue());
         return entity;
     }
 
