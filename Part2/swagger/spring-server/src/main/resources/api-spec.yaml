@@ -37,6 +37,36 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Badge'
+  /pointScale:
+    post:
+      description: create a pointScale
+      operationId: createPointScale
+      consumes:
+        - application/json
+      parameters:
+        - name: pointScale
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointScale'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+    get:
+      description: get the list of all pointScales
+      operationId: getPointScales
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PointScale'
+
 definitions:
   Badge:
     type: object
@@ -46,6 +76,13 @@ definitions:
       image:
         type: string
       type:
+        type: string
+      value:
+        type: integer
+  PointScale:
+    type: object
+    properties:
+      name:
         type: string
       value:
         type: integer
