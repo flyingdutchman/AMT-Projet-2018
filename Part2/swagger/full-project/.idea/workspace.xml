@@ -241,7 +241,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="22" />
+    <option name="y" value="21" />
     <option name="width" value="1835" />
     <option name="height" value="990" />
   </component>
@@ -413,7 +413,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544134706419" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544195194492" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -634,7 +634,7 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
+    <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -649,7 +649,7 @@
     <configuration name="All Features in: fruits-specs" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
       <option name="GLUE" value="io.avalia.fruits.api.spec.steps" />
       <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
-      <module name="fruitsSpecification" />
+      <module name="gamificationSpecification" />
       <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome" />
       <extension name="coverage">
         <pattern>
@@ -681,7 +681,7 @@
     <configuration name="Feature: creation" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
       <option name="GLUE" value="io.avalia.fruits.api.spec.steps" />
       <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
-      <module name="fruitsSpecification" />
+      <module name="gamificationSpecification" />
       <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome" />
       <extension name="coverage">
         <pattern>
@@ -694,7 +694,7 @@
       </method>
     </configuration>
     <configuration name="SpecificationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="fruitsSpecification" />
+      <module name="gamificationSpecification" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="io.avalia.fruits.api.spec.*" />
@@ -761,13 +761,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Swagger2SpringBoot (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <module name="swagger-spring" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="io.avalia.badges.Swagger2SpringBoot" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Swagger2SpringBoot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="swagger-spring" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="io.avalia.badges.Swagger2SpringBoot" />
@@ -784,7 +777,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
+    <configuration default="true" type="TestNG">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <properties />
       <listeners />
@@ -792,16 +785,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
       <option name="PROGRAM_PARAMETERS" />
-      <predefined_log_file id="idea.log" enabled="true" />
+      <predefined_log_file enabled="true" id="idea.log" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+    <configuration default="true" type="js.build_tools.gulp">
       <node-interpreter>project</node-interpreter>
       <node-options />
       <gulpfile />
@@ -811,12 +804,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Spring Boot.Swagger2SpringBoot" />
-      <item itemvalue="Spring Boot.Swagger2SpringBoot (1)" />
       <item itemvalue="Cucumber java.All Features in: fruits-specs" />
       <item itemvalue="Cucumber java.Feature: creation" />
       <item itemvalue="Cucumber java.All Features in: spring-server" />
       <item itemvalue="JUnit.SpecificationTest" />
+      <item itemvalue="Spring Boot.Swagger2SpringBoot" />
     </list>
     <recent_temporary>
       <list>
