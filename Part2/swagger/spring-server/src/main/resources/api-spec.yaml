@@ -95,6 +95,35 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
+  /rules:
+    post:
+      description: create a rule
+      operationId: createRule
+      consumes:
+      - application/json
+      parameters:
+      - name: rule
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Rule'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
+    get:
+      description: get the list of all rules
+      operationId: getRules
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Rule'
 
 definitions:
   Badge:
@@ -125,4 +154,13 @@ definitions:
       type:
         type: string
       date:
+        type: string
+  Rule:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      action:
         type: string
