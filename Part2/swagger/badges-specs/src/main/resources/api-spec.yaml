@@ -6,20 +6,20 @@ info:
 host: localhost:8080
 basePath: /api
 schemes:
-- http
+  - http
 paths:
-  /fruits:
+  /badges:
     post:
-      description: create a fruit
-      operationId: createFruit
+      description: create a badge
+      operationId: createBadge
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - name: badge
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/Badge'
+        - name: badge
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Badge'
       responses:
         '201':
           description: created
@@ -29,7 +29,7 @@ paths:
       description: get the list of all badges
       operationId: getBadges
       produces:
-      - application/json
+        - application/json
       responses:
         '200':
           description: success
@@ -56,7 +56,7 @@ paths:
             type: object
     get:
       description: get the list of all pointScales
-      operationId: getPointScale
+      operationId: getPointScales
       produces:
         - application/json
       responses:
@@ -97,6 +97,17 @@ paths:
               $ref: '#/definitions/Event'
 
 definitions:
+  Badge:
+    type: object
+    properties:
+      name:
+        type: string
+      image:
+        type: string
+      type:
+        type: string
+      value:
+        type: integer
   PointScale:
     type: object
     properties:
