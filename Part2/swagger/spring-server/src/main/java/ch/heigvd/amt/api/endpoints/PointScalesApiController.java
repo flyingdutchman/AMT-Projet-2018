@@ -38,7 +38,7 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<PointScale> getPointScaleById(String pointScaleId) {
-        PointScaleEntity pointScale = pointScaleRepository.findOne(Long.getLong(pointScaleId));
+        PointScaleEntity pointScale = pointScaleRepository.findOne(Long.parseLong(pointScaleId));
         if(pointScale == null) {
             //TODO nicer
             return ResponseEntity.noContent().build();

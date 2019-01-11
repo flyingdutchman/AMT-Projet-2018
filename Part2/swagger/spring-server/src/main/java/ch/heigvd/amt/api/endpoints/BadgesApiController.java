@@ -49,7 +49,7 @@ public class BadgesApiController implements BadgesApi {
 
     @Override
     public ResponseEntity<Badge> getBadgesById(String badgeId) {
-        BadgeEntity badge = badgeRepository.findOne(Long.getLong(badgeId));
+        BadgeEntity badge = badgeRepository.findOne(Long.parseLong(badgeId));
         if(badge == null) {
             //TODO nicer
             return ResponseEntity.noContent().build();
