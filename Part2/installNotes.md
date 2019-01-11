@@ -10,6 +10,5 @@
    ﻿6. You can then launch the program by running the `Execute with Spring boot` configuration.
    ﻿7. The go on `localhost:8080/api` to check that the documentation displays correctly
    ﻿8. The response of the get is empty (while it has smth in the webcast), it is normal 
-   ﻿9. Go back on intellij and to the `clean` and `install` commands but thius time on "fruitSpecification" in the "Maven Project" tab
+   ﻿9. Go back on intellij and to the `clean` and `install` commands but this time on "fruitSpecification" in the "Maven Project" tab
    ﻿10. You can then run the tests by going to `\fruits-specs\src\test\java\io\avalia\fruits\api\spec\SpecificationTest.java` and right click on the double green arrows near the `public class SpecificationTest` and select `Run 'Specification Test'`
-   ﻿11. 
