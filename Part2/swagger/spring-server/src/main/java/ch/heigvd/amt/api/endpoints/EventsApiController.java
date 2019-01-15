@@ -1,5 +1,6 @@
 package ch.heigvd.amt.api.endpoints;
 
+import ch.heigvd.amt.RFC3339DateFormat;
 import ch.heigvd.amt.api.EventsApi;
 import ch.heigvd.amt.api.model.Event;
 import ch.heigvd.amt.entities.EventEntity;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,19 +49,18 @@ public class EventsApiController implements EventsApi {
 
     private EventEntity toEventEntity(Event event) {
         EventEntity entity = new EventEntity();
-        entity.setName(event.getName());
-        entity.setDescription(event.getDescription());
+        //entity.setId(event.get);
+        entity.setTimestamp(event.getTimestamp().toDate());
         entity.setType(event.getType());
-        entity.setDate(event.getDate());
+        entity.setUserId(event.getUserId());
         return entity;
     }
 
     private Event toEvent(EventEntity entity) {
         Event event = new Event();
-        event.setName(entity.getName());
-        event.setDescription(entity.getDescription());
+        event.setTimestamp(event.getTimestamp());
         event.setType(entity.getType());
-        event.setDate(entity.getDate());
+        event.setUserId(entity.getUserId());
         return event;
     }
 }

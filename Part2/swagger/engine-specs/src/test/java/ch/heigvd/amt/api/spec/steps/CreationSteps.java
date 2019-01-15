@@ -7,7 +7,7 @@ import cucumber.api.java.en.When;
 import ch.heigvd.amt.ApiException;
 import ch.heigvd.amt.ApiResponse;
 import ch.heigvd.amt.api.DefaultApi;
-import ch.heigvd.amt.api.dto.Badge;
+import ch.heigvd.amt.api.dto.BadgeWithoutId;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -20,7 +20,7 @@ public class CreationSteps {
     private Environment environment;
     private DefaultApi api;
 
-    Badge badge;
+    BadgeWithoutId badge;
 
     private ApiResponse lastApiResponse;
     private ApiException lastApiException;
@@ -39,7 +39,7 @@ public class CreationSteps {
 
     @Given("^I have a badge payload$")
     public void i_have_a_badge_payload() throws Throwable {
-        badge = new ch.heigvd.amt.api.dto.Badge();
+        badge = new ch.heigvd.amt.api.dto.BadgeWithoutId();
     }
 
     @When("^I POST it to the /badges endpoint$")

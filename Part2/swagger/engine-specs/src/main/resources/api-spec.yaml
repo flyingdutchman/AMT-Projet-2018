@@ -19,16 +19,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-              image:
-                type: string
-              type:
-                type: string
-              value:
-                type: integer
+            $ref: '#/definitions/BadgeWithoutId'
       responses:
         '201':
           description: created
@@ -55,7 +46,8 @@ paths:
       parameters:
         - in: path
           name: badgeId
-          type: long
+          type: integer
+          format: int64
           required: true
       responses:
         '200':
@@ -73,12 +65,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                type: integer
+            $ref: '#/definitions/PointScaleWithoutId'
       responses:
         '201':
           description: created
@@ -105,7 +92,8 @@ paths:
       parameters:
         - in: path
           name: pointScaleId
-          type: long
+          type: integer
+          format: int64
           required: true
       responses:
         '200':
@@ -141,42 +129,18 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
-  /rules:
-    post:
-      description: create a rule
-      operationId: createRule
-      consumes:
-        - application/json
-      parameters:
-        - name: rule
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Rule'
-      responses:
-        '201':
-          description: created
-          schema:
-            type: object
-    get:
-      description: get the list of all rules
-      operationId: getRules
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Rule'
 
 definitions:
   Badge:
+    allOf:
+      - properties:
+          id:
+            type: integer
+            format: int64
+      - $ref: '#/definitions/BadgeWithoutId'
+  BadgeWithoutId:
     type: object
     properties:
-      id:
-        type: long
       name:
         type: string
       image:
@@ -186,10 +150,15 @@ definitions:
       value:
         type: integer
   PointScale:
+    allOf:
+      - properties:
+          id:
+            type: integer
+            format: int64
+      - $ref: '#/definitions/PointScaleWithoutId'
+  PointScaleWithoutId:
     type: object
     properties:
-      id:
-        type: long
       name:
         type: string
       value:
@@ -197,20 +166,10 @@ definitions:
   Event:
     type: object
     properties:
-      name:
-        type: string
-      description:
+      userId:
         type: string
       type:
         type: string
-      date:
+      timestamp:
         type: string
-  Rule:
-    type: object
-    properties:
-      name:
-        type: string
-      description:
-        type: string
-      action:
-        type: string
+        format: date-time

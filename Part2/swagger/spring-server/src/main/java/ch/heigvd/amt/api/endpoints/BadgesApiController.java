@@ -2,6 +2,7 @@ package ch.heigvd.amt.api.endpoints;
 
 import ch.heigvd.amt.api.BadgesApi;
 import ch.heigvd.amt.api.model.Badge;
+import ch.heigvd.amt.api.model.BadgeWithoutId;
 import ch.heigvd.amt.entities.BadgeEntity;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
@@ -25,8 +26,10 @@ public class BadgesApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
 
+
     @Override
-    public ResponseEntity<Object> createBadge(Badge badge) {
+    public ResponseEntity<Object> createBadge(BadgeWithoutId badge) {
+
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         badgeRepository.save(newBadgeEntity);
         Long id = newBadgeEntity.getId();
@@ -48,8 +51,8 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Badge> getBadgesById(String badgeId) {
-        BadgeEntity badge = badgeRepository.findOne(Long.parseLong(badgeId));
+    public ResponseEntity<Badge> getBadgesById(Long badgeId) {
+        BadgeEntity badge = badgeRepository.findOne(badgeId);
         if(badge == null) {
             //TODO nicer
             return ResponseEntity.noContent().build();
@@ -57,8 +60,9 @@ public class BadgesApiController implements BadgesApi {
         return ResponseEntity.ok(toBadge(badge));
     }
 
-    private BadgeEntity toBadgeEntity(Badge badge) {
+    private BadgeEntity toBadgeEntity(BadgeWithoutId badge) {
         BadgeEntity entity = new BadgeEntity();
+        //entity.setId();
         entity.setName(badge.getName());
         entity.setImage(badge.getImage());
         entity.setType(badge.getType());

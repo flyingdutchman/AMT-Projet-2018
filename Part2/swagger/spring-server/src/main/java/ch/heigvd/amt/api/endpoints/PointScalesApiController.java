@@ -2,6 +2,7 @@ package ch.heigvd.amt.api.endpoints;
 
 import ch.heigvd.amt.api.PointScalesApi;
 import ch.heigvd.amt.api.model.PointScale;
+import ch.heigvd.amt.api.model.PointScaleWithoutId;
 import ch.heigvd.amt.entities.PointScaleEntity;
 import ch.heigvd.amt.repositories.PointScaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PointScalesApiController implements PointScalesApi {
     PointScaleRepository pointScaleRepository;
 
     @Override
-    public ResponseEntity<Object> createPointScale(PointScale pointScale) {
+    public ResponseEntity<Object> createPointScale(PointScaleWithoutId pointScale) {
         PointScaleEntity newPointScalEntity = toPointScaleEntity(pointScale);
         pointScaleRepository.save(newPointScalEntity);
         Long id = newPointScalEntity.getId();
@@ -37,8 +38,8 @@ public class PointScalesApiController implements PointScalesApi {
     }
 
     @Override
-    public ResponseEntity<PointScale> getPointScaleById(String pointScaleId) {
-        PointScaleEntity pointScale = pointScaleRepository.findOne(Long.parseLong(pointScaleId));
+    public ResponseEntity<PointScale> getPointScaleById(Long pointScaleId) {
+        PointScaleEntity pointScale = pointScaleRepository.findOne(pointScaleId);
         if(pointScale == null) {
             //TODO nicer
             return ResponseEntity.noContent().build();
@@ -57,8 +58,9 @@ public class PointScalesApiController implements PointScalesApi {
         return ResponseEntity.ok(pointScales);
     }
 
-    private PointScaleEntity toPointScaleEntity(PointScale pointScale) {
+    private PointScaleEntity toPointScaleEntity(PointScaleWithoutId pointScale) {
         PointScaleEntity entity = new PointScaleEntity();
+        //TODO Set id entity.setId()
         entity.setName(pointScale.getName());
         entity.setValue(pointScale.getValue());
         return entity;
