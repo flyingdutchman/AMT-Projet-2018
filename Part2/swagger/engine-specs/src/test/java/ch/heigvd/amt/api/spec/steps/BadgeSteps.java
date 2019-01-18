@@ -13,9 +13,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Olivier Liechti on 27/07/17.
+ * Created by Mika Pagani.
  */
-public class CreationSteps {
+public class BadgeSteps {
 
     private Environment environment;
     private DefaultApi api;
@@ -27,7 +27,7 @@ public class CreationSteps {
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
 
-    public CreationSteps(Environment environment) {
+    public BadgeSteps(Environment environment) {
         this.environment = environment;
         this.api = environment.getApi();
     }

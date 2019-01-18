@@ -26,9 +26,8 @@ public class BadgesApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
 
-
     @Override
-    public ResponseEntity<Object> createBadge(BadgeWithoutId badge) {
+    public ResponseEntity<Object> createBadge(@ApiParam(value = "" ,required=true ) @RequestBody BadgeWithoutId badge) {
 
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         badgeRepository.save(newBadgeEntity);
@@ -62,7 +61,6 @@ public class BadgesApiController implements BadgesApi {
 
     private BadgeEntity toBadgeEntity(BadgeWithoutId badge) {
         BadgeEntity entity = new BadgeEntity();
-        //entity.setId();
         entity.setName(badge.getName());
         entity.setImage(badge.getImage());
         entity.setType(badge.getType());
@@ -72,6 +70,7 @@ public class BadgesApiController implements BadgesApi {
 
     private Badge toBadge(BadgeEntity entity) {
         Badge badge = new Badge();
+        badge.setId(entity.getId());
         badge.setName(entity.getName());
         badge.setImage(entity.getImage());
         badge.setType(entity.getType());

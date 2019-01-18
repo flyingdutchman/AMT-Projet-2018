@@ -49,8 +49,7 @@ public class EventsApiController implements EventsApi {
 
     private EventEntity toEventEntity(Event event) {
         EventEntity entity = new EventEntity();
-        //entity.setId(event.get);
-        entity.setTimestamp(event.getTimestamp().toDate());
+        entity.setTimestamp(event.getTimestamp());
         entity.setType(event.getType());
         entity.setUserId(event.getUserId());
         return entity;
@@ -58,7 +57,7 @@ public class EventsApiController implements EventsApi {
 
     private Event toEvent(EventEntity entity) {
         Event event = new Event();
-        event.setTimestamp(event.getTimestamp());
+        event.setTimestamp(entity.getTimestamp());
         event.setType(entity.getType());
         event.setUserId(entity.getUserId());
         return event;

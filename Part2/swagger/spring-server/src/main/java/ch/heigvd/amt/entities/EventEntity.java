@@ -1,11 +1,8 @@
 package ch.heigvd.amt.entities;
 
-import ch.heigvd.amt.RFC3339DateFormat;
+import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,7 +15,8 @@ public class EventEntity implements Serializable {
 
     private String userId;
     private String type;
-    private Date timestamp;
+
+    private DateTime timestamp;
 
     public long getId() {
         return id;
@@ -44,11 +42,11 @@ public class EventEntity implements Serializable {
         this.type = type;
     }
 
-    public Date getTimestamp() {
+    public DateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
     }
 }

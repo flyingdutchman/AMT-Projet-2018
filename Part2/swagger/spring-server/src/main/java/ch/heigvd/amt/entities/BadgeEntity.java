@@ -19,7 +19,7 @@ public class BadgeEntity implements Serializable {
     private String name;
     private String image;
     private String type;
-    private int value;
+    private Integer value;
 
     public long getId() {
         return id;
@@ -53,11 +53,11 @@ public class BadgeEntity implements Serializable {
         this.type = type;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 }
