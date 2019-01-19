@@ -11,18 +11,18 @@ public class RuleEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String type;
-    private String awardBadge;
-    private String pointScale;
+    private Long awardBadge;
+    private Long pointScale;
     private Integer amount;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -34,19 +34,19 @@ public class RuleEntity implements Serializable {
         this.type = type;
     }
 
-    public String getAwardBadge() {
+    public Long getAwardBadge() {
         return awardBadge;
     }
 
-    public void setAwardBadge(String awardBadge) {
+    public void setAwardBadge(Long awardBadge) {
         this.awardBadge = awardBadge;
     }
 
-    public String getPointScale() {
+    public Long getPointScale() {
         return pointScale;
     }
 
-    public void setPointScale(String pointScale) {
+    public void setPointScale(Long pointScale) {
         this.pointScale = pointScale;
     }
 

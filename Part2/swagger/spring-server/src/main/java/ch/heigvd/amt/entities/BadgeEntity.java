@@ -11,15 +11,12 @@ import java.io.Serializable;
  */
 @Entity
 public class BadgeEntity implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String image;
-    private String type;
-    private Integer value;
 
     public Long getId() {
         return id;
@@ -43,21 +40,5 @@ public class BadgeEntity implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 }

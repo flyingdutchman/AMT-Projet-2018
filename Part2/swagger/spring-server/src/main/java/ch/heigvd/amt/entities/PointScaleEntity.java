@@ -14,7 +14,7 @@ public class PointScaleEntity implements Serializable {
     private long id;
 
     private String name;
-    private Integer value;
+    private String description;
 
     public long getId() {
         return id;
@@ -32,11 +32,11 @@ public class PointScaleEntity implements Serializable {
         this.name = name;
     }
 
-    public Integer getValue() {
-        return value;
+    public String getDescription() {
+        return description;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

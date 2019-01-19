@@ -7,8 +7,10 @@ import ch.heigvd.amt.entities.BadgeEntity;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -49,11 +51,10 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Badge> getBadgesById(Long badgeId) {
+    public ResponseEntity<Badge> getBadgesById(@ApiParam(value = "", required = true) @PathVariable("badgeId") Long badgeId) {
         BadgeEntity badge = badgeRepository.findOne(badgeId);
         if (badge == null) {
-            //TODO nicer
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(toBadge(badge));
     }
@@ -62,8 +63,6 @@ public class BadgesApiController implements BadgesApi {
         BadgeEntity entity = new BadgeEntity();
         entity.setName(badge.getName());
         entity.setImage(badge.getImage());
-        entity.setType(badge.getType());
-        entity.setValue(badge.getValue());
         return entity;
     }
 
@@ -72,8 +71,6 @@ public class BadgesApiController implements BadgesApi {
         badge.setId(entity.getId());
         badge.setName(entity.getName());
         badge.setImage(entity.getImage());
-        badge.setType(entity.getType());
-        badge.setValue(entity.getValue());
         return badge;
     }
 }
