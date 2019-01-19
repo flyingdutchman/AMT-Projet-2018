@@ -129,8 +129,48 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Event'
+  /rules:
+    post:
+      description: create a rule
+      operationId: createRule
+      consumes:
+        - application/json
+      parameters:
+        - name: rule
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Rule'
+      responses:
+        '201':
+          description: created
+          schema:
+            type: object
 
 definitions:
+  Rule:
+    type: object
+    required:
+      - if
+      - then
+    properties:
+      if:
+        type: object
+        properties:
+          type:
+            type: string
+      then:
+        type: object
+        properties:
+          awardBadge:
+            type: string
+          awardPoints:
+            type: object
+            properties:
+              pointScale:
+                type: string
+              amount:
+                type: integer
   Badge:
     allOf:
       - properties:

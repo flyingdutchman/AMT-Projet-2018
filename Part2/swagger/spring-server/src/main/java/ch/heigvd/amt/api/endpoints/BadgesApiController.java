@@ -7,13 +7,11 @@ import ch.heigvd.amt.entities.BadgeEntity;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class BadgesApiController implements BadgesApi {
     BadgeRepository badgeRepository;
 
     @Override
-    public ResponseEntity<Object> createBadge(@ApiParam(value = "" ,required=true ) @RequestBody BadgeWithoutId badge) {
+    public ResponseEntity<Object> createBadge(@ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
 
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         badgeRepository.save(newBadgeEntity);
@@ -35,7 +33,8 @@ public class BadgesApiController implements BadgesApi {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(newBadgeEntity.getId()).toUri();
+                .buildAndExpand(newBadgeEntity.getId())
+                .toUri();
 
         return ResponseEntity.created(location).build();
     }
@@ -52,7 +51,7 @@ public class BadgesApiController implements BadgesApi {
     @Override
     public ResponseEntity<Badge> getBadgesById(Long badgeId) {
         BadgeEntity badge = badgeRepository.findOne(badgeId);
-        if(badge == null) {
+        if (badge == null) {
             //TODO nicer
             return ResponseEntity.noContent().build();
         }
