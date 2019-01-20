@@ -26,7 +26,7 @@ public class PointScalesApiController implements PointScalesApi {
     PointScaleRepository pointScaleRepository;
 
     @Override
-    public ResponseEntity<Object> createPointScale(@ApiParam(value = "", required = true) @RequestBody PointScaleWithoutId pointScale) {
+    public ResponseEntity<PointScale> createPointScale(@ApiParam(value = "", required = true) @RequestBody PointScaleWithoutId pointScale) {
         PointScaleEntity newPointScalEntity = toPointScaleEntity(pointScale);
         pointScaleRepository.save(newPointScalEntity);
         Long id = newPointScalEntity.getId();
@@ -36,7 +36,7 @@ public class PointScalesApiController implements PointScalesApi {
                 .buildAndExpand(newPointScalEntity.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(toPointScale(newPointScalEntity));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PointScalesApiController implements PointScalesApi {
     }
 
     @Override
-    public ResponseEntity<List<PointScale>> getPointScales() {
+    public ResponseEntity<List<PointScale>> getAllPointScales() {
 
         List<PointScale> pointScales = new ArrayList<>();
         for (PointScaleEntity pointScaleEntity : pointScaleRepository.findAll()) {

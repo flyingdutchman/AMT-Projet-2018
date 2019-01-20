@@ -6,6 +6,7 @@ import ch.heigvd.amt.entities.RuleEntity;
 import ch.heigvd.amt.repositories.RuleRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,36 +27,36 @@ public class RulesApiController implements RulesApi {
     RuleRepository ruleRepository;
 
     @Override
-    public ResponseEntity<Object> createRule(@ApiParam(value = "", required = true) @RequestBody RuleWithoutId rule) {
+    public ResponseEntity<Rule> createRule(@ApiParam(value = "", required = true) @RequestBody RuleWithoutId rule) {
         RuleWithoutIdThen ruleThen = rule.getThen();
         RuleWithoutIdIf ruleIf = rule.getIf();
 
         if (ruleThen == null || ruleIf == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body((Object) "The 'If' and 'Then' field are mandatory, please correct your requset");
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Error-Message", "The 'If' and 'Then' field are mandatory, please correct your requset");
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         if (ruleIf.getType() == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body((Object) "The 'type' field in 'If' is mandatory, please correct your requset");
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Error-Message", "The 'type' field in 'If' is mandatory, please correct your requset");
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         RuleWithoutIdThenAwardPoints thenAwardPts = ruleThen.getAwardPoints();
 
         // If there is nothing in Then
         if (thenAwardPts == null && ruleThen.getAwardBadgeId() == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body((Object) "The 'Then' field must be completed with at least one of 'awardBadge' or 'awardPoint'");
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Error-Message", "The 'amount' and 'pointScale' fields of 'awardPoints are mandatory'");
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         // If AwardPoints exist and one of its field is missing
         if (thenAwardPts != null && (thenAwardPts.getPointScaleId() == null || thenAwardPts.getAmount() == null)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body((Object) "The 'amount' and 'pointScale' fields of 'awardPoints are mandatory'");
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Error-Message", "The 'type' field in 'If' is mandatory, please correct your requset");
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         RuleEntity newRuleEntity = toRuleEntity(rule);
@@ -67,7 +68,7 @@ public class RulesApiController implements RulesApi {
                 .buildAndExpand(newRuleEntity.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(toRule(newRuleEntity));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class RulesApiController implements RulesApi {
     }
 
     @Override
-    public ResponseEntity<List<Rule>> getRules() {
+    public ResponseEntity<List<Rule>> getAllRules() {
         List<Rule> rules = new ArrayList<>();
         for (RuleEntity re : ruleRepository.findAll()) {
             rules.add(toRule(re));

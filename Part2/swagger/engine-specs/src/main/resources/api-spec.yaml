@@ -24,10 +24,10 @@ paths:
         '201':
           description: created
           schema:
-            type: object
+            $ref: '#/definitions/Badge'
     get:
       description: get the list of all badges
-      operationId: getBadges
+      operationId: getAllBadges
       produces:
         - application/json
       responses:
@@ -70,10 +70,10 @@ paths:
         '201':
           description: created
           schema:
-            type: object
+            $ref: '#/definitions/PointScale'
     get:
       description: get the list of all pointScales
-      operationId: getPointScales
+      operationId: getAllPointScales
       produces:
         - application/json
       responses:
@@ -133,10 +133,10 @@ paths:
         '201':
           description: created
           schema:
-            type: object
+            $ref: '#/definitions/Rule'
     get:
       description: get the list of all rules
-      operationId: getRules
+      operationId: getAllRules
       produces:
         - application/json
       responses:
@@ -195,12 +195,15 @@ definitions:
               amount:
                 type: integer
   Badge:
-    allOf:
-      - properties:
-          id:
-            type: integer
-            format: int64
-      - $ref: '#/definitions/BadgeWithoutId'
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      image:
+        type: string
   BadgeWithoutId:
     type: object
     properties:
@@ -209,12 +212,15 @@ definitions:
       image:
         type: string
   PointScale:
-    allOf:
-      - properties:
-          id:
-            type: integer
-            format: int64
-      - $ref: '#/definitions/PointScaleWithoutId'
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
   PointScaleWithoutId:
     type: object
     properties:

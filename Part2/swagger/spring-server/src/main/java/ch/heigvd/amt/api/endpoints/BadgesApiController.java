@@ -7,6 +7,7 @@ import ch.heigvd.amt.entities.BadgeEntity;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,27 @@ public class BadgesApiController implements BadgesApi {
     BadgeRepository badgeRepository;
 
     @Override
-    public ResponseEntity<Object> createBadge(@ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
+    public ResponseEntity<Badge> createBadge(@ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
 
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
+        BadgeEntity foundDouble = null;
+        for(BadgeEntity be : badgeRepository.findAll()) {
+            if(be.getName().equals(newBadgeEntity.getName())) {
+                foundDouble = be;
+                break;
+            }
+        }
+
+        if(foundDouble != null) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Error-Message", "A badge with the same name already exists : ");
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(foundDouble.getId())
+                    .toUri();
+            return ResponseEntity.status(HttpStatus.CONFLICT).headers(responseHeaders).location(location).build();
+        }
+
         badgeRepository.save(newBadgeEntity);
         Long id = newBadgeEntity.getId();
 
@@ -38,11 +57,11 @@ public class BadgesApiController implements BadgesApi {
                 .buildAndExpand(newBadgeEntity.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(toBadge(newBadgeEntity));
     }
 
     @Override
-    public ResponseEntity<List<Badge>> getBadges() {
+    public ResponseEntity<List<Badge>> getAllBadges() {
         List<Badge> badges = new ArrayList<>();
         for (BadgeEntity badgeEntity : badgeRepository.findAll()) {
             badges.add(toBadge(badgeEntity));
