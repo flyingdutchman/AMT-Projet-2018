@@ -17,6 +17,7 @@ public class BadgeEntity implements Serializable {
 
     private String name;
     private String image;
+    private Long owner;
 
     public Long getId() {
         return id;
@@ -40,5 +41,13 @@ public class BadgeEntity implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 }

@@ -19,6 +19,7 @@ public class PointsAwardEntity implements Serializable {
 
     private Long userId;
     private Long pointScaleId;
+    private Long owner;
     private Integer amount;
     private DateTime timestamp;
 
@@ -44,6 +45,14 @@ public class PointsAwardEntity implements Serializable {
 
     public void setPointScaleId(Long pointScaleId) {
         this.pointScaleId = pointScaleId;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 
     public Integer getAmount() {

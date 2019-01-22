@@ -3,17 +3,19 @@ package ch.heigvd.amt.api.endpoints;
 import ch.heigvd.amt.api.PointScalesApi;
 import ch.heigvd.amt.api.model.PointScale;
 import ch.heigvd.amt.api.model.PointScaleWithoutId;
-import ch.heigvd.amt.api.util.ApiHeaderBuilder;
+import ch.heigvd.amt.api.util.ApiResponseBuilder;
 import ch.heigvd.amt.entities.PointScaleEntity;
+import ch.heigvd.amt.entities.UserEntity;
 import ch.heigvd.amt.repositories.PointScaleRepository;
+import ch.heigvd.amt.repositories.UserRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -27,17 +29,23 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Autowired
     PointScaleRepository pointScaleRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
-    public ResponseEntity<PointScale> createPointScale(@ApiParam(value = "", required = true) @RequestBody PointScaleWithoutId pointScale) {
+    public ResponseEntity<PointScale> createPointScale(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @RequestBody PointScaleWithoutId pointScale) {
 
-        if (pointScale.getDescription() == null || pointScale.getName() == null) {
-            String message = "The 'name' and 'description' fields are mandatory";
-            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
-            return ResponseEntity.badRequest().headers(responseHeaders).build();
+        UserEntity userEntity = getUser(apiKey);
+
+        if (userEntity == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
         }
 
-        PointScaleEntity newPointScalEntity = toPointScaleEntity(pointScale);
+        if (pointScale.getDescription() == null || pointScale.getName() == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'name' and 'description' fields are mandatory");
+        }
+
+        PointScaleEntity newPointScalEntity = toPointScaleEntity(pointScale, userEntity.getId());
         PointScaleEntity foundDouble = null;
 
         for (PointScaleEntity pe : pointScaleRepository.findAll()) {
@@ -48,13 +56,11 @@ public class PointScalesApiController implements PointScalesApi {
         }
 
         if (foundDouble != null) {
-            String message = "A pointScale with the same name already exists : ";
-            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(foundDouble.getId())
                     .toUri();
-            return ResponseEntity.status(HttpStatus.CONFLICT).headers(responseHeaders).location(location).build();
+            return ApiResponseBuilder.conflictMessage(location);
         }
 
         pointScaleRepository.save(newPointScalEntity);
@@ -68,31 +74,42 @@ public class PointScalesApiController implements PointScalesApi {
     }
 
     @Override
-    public ResponseEntity<PointScale> getPointScaleById(@ApiParam(value = "", required = true) @PathVariable("pointScaleId") Long pointScaleId) {
+    public ResponseEntity<PointScale> getPointScaleById(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @PathVariable("pointScaleId") Long pointScaleId) {
+        UserEntity userEntity = getUser(apiKey);
+        if (userEntity == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
         PointScaleEntity pointScale = pointScaleRepository.findOne(pointScaleId);
         if (pointScale == null) {
-            //TODO nicer
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (pointScale.getOwner() != userEntity.getId()) {
+            return ApiResponseBuilder.forbiddenMessage();
         }
         return ResponseEntity.ok(toPointScale(pointScale));
     }
 
     @Override
-    public ResponseEntity<List<PointScale>> getAllPointScales() {
-
+    public ResponseEntity<List<PointScale>> getAllPointScales(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
+        UserEntity userEntity = getUser(apiKey);
+        if (userEntity == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
         List<PointScale> pointScales = new ArrayList<>();
         for (PointScaleEntity pointScaleEntity : pointScaleRepository.findAll()) {
-            pointScales.add(toPointScale(pointScaleEntity));
+            if (pointScaleEntity.getOwner() == userEntity.getId()) {
+                pointScales.add(toPointScale(pointScaleEntity));
+            }
         }
 
         return ResponseEntity.ok(pointScales);
     }
 
-    private PointScaleEntity toPointScaleEntity(PointScaleWithoutId pointScale) {
+    private PointScaleEntity toPointScaleEntity(PointScaleWithoutId pointScale, Long owner) {
         PointScaleEntity entity = new PointScaleEntity();
-        //TODO Set id entity.setId()
         entity.setName(pointScale.getName());
         entity.setDescription(pointScale.getDescription());
+        entity.setOwner(owner);
         return entity;
     }
 
@@ -101,6 +118,17 @@ public class PointScalesApiController implements PointScalesApi {
         pointScale.setId(entity.getId());
         pointScale.setName(entity.getName());
         pointScale.setDescription(entity.getDescription());
+        pointScale.setOwner(entity.getOwner());
         return pointScale;
+    }
+
+    private UserEntity getUser(String apiKey) {
+        UserEntity userEntity = null;
+        for (UserEntity ue : userRepository.findAll()) {
+            if (ue.getApiKey() == apiKey) {
+                userEntity = ue;
+            }
+        }
+        return userEntity;
     }
 }

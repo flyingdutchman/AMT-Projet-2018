@@ -17,6 +17,7 @@ public class RuleEntity implements Serializable {
     private Long awardBadge;
     private Long pointScale;
     private Integer amount;
+    private Long owner;
 
     public Long getId() {
         return id;
@@ -56,5 +57,13 @@ public class RuleEntity implements Serializable {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 }

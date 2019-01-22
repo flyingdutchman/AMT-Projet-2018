@@ -16,8 +16,8 @@ public class ForeignUserEntity implements Serializable {
     private long id;
 
     private String applicationUserId;
+    private Long owner;
     private ArrayList<Long> badgeOwned;
-    private HashMap<Long, Integer> badgeProgress;
     private HashMap<Long, Integer> pointScaleProgress;
 
     public long getId() {
@@ -36,20 +36,20 @@ public class ForeignUserEntity implements Serializable {
         this.applicationUserId = applicationUserId;
     }
 
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
+    }
+
     public ArrayList<Long> getBadgeOwned() {
         return badgeOwned;
     }
 
     public void setBadgeOwned(ArrayList<Long> badgeOwned) {
         this.badgeOwned = badgeOwned;
-    }
-
-    public HashMap<Long, Integer> getBadgeProgress() {
-        return badgeProgress;
-    }
-
-    public void setBadgeProgress(HashMap<Long, Integer> badgeProgress) {
-        this.badgeProgress = badgeProgress;
     }
 
     public HashMap<Long, Integer> getPointScaleProgress() {
@@ -60,8 +60,17 @@ public class ForeignUserEntity implements Serializable {
         this.pointScaleProgress = pointScaleProgress;
     }
 
-    public void addOwnedBadge(Long badgeId) {
-        badgeOwned.add(badgeId);
+    /**
+     *
+     * @param badgeId
+     * @return Whether or not a badge has been created
+     */
+    public boolean addOwnedBadge(Long badgeId) {
+        if(!badgeOwned.contains(badgeId)) {
+            badgeOwned.add(badgeId);
+            return true;
+        }
+        return false;
     }
 
     public void addPointScaleProgress(Long pointScaleId, Integer progress) {

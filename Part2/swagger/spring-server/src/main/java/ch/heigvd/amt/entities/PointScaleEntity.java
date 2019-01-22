@@ -15,6 +15,7 @@ public class PointScaleEntity implements Serializable {
 
     private String name;
     private String description;
+    private Long owner;
 
     public long getId() {
         return id;
@@ -38,5 +39,13 @@ public class PointScaleEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 }

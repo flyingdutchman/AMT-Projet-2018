@@ -7,8 +7,17 @@ host: localhost:8080
 basePath: /api
 schemes:
   - http
+parameters:
+  apiParam:
+    in: header
+    name: apiKey
+    description: The API key header
+    required: true
+    type: string
 paths:
   /badges:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     post:
       description: create a badge
       operationId: createBadge
@@ -21,23 +30,38 @@ paths:
           schema:
             $ref: '#/definitions/BadgeWithoutId'
       responses:
-        '201':
-          description: created
+        201:
+          description: Badge successfully created
           schema:
             $ref: '#/definitions/Badge'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        409:
+          $ref: '#/responses/Conflict'
+
     get:
       description: get the list of all badges
       operationId: getAllBadges
       produces:
         - application/json
       responses:
-        '200':
-          description: success
+        200:
+          description: List of badges successfully retrieved
           schema:
             type: array
             items:
               $ref: '#/definitions/Badge'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
   /badges/{badgeId}:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     get:
       description: Gets a badge by ID.
       operationId: getBadgeById
@@ -50,11 +74,19 @@ paths:
           format: int64
           required: true
       responses:
-        '200':
-          description: success
+        200:
+          description: Badge successfully retrieved
           schema:
             $ref: '#/definitions/Badge'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /pointScales:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     post:
       description: create a pointScale
       operationId: createPointScale
@@ -67,23 +99,37 @@ paths:
           schema:
             $ref: '#/definitions/PointScaleWithoutId'
       responses:
-        '201':
-          description: created
+        201:
+          description: PointScale successfully created
           schema:
             $ref: '#/definitions/PointScale'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        409:
+          $ref: '#/responses/Conflict'
     get:
       description: get the list of all pointScales
       operationId: getAllPointScales
       produces:
         - application/json
       responses:
-        '200':
-          description: success
+        200:
+          description: List of pointScales successfully retrieved
           schema:
             type: array
             items:
               $ref: '#/definitions/PointScale'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
   /pointScales/{pointScaleId}:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     get:
       description: Gets a PointScale by ID.
       operationId: getPointScaleById
@@ -96,11 +142,19 @@ paths:
           format: int64
           required: true
       responses:
-        '200':
-          description: success
+        200:
+          description: PointScale successfully retrieved
           schema:
             $ref: '#/definitions/PointScale'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /events:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     post:
       description: send an event
       operationId: sendEvent
@@ -113,11 +167,17 @@ paths:
           schema:
             $ref: '#/definitions/Event'
       responses:
-        '201':
-          description: created
+        200:
+          description: Event successfully sent
           schema:
             type: object
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
   /rules:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     post:
       description: create a rule
       operationId: createRule
@@ -130,23 +190,35 @@ paths:
           schema:
             $ref: '#/definitions/RuleWithoutId'
       responses:
-        '201':
-          description: created
+        201:
+          description: Rule successfully created
           schema:
             $ref: '#/definitions/Rule'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
     get:
       description: get the list of all rules
       operationId: getAllRules
       produces:
         - application/json
       responses:
-        '200':
-          description: success
+        200:
+          description: List of rules successfully retrieved
           schema:
             type: array
             items:
               $ref: '#/definitions/Rule'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
   /rules/{ruleId}:
+    parameters:
+      - $ref: '#/parameters/apiParam'
     get:
       description: Gets a PointScale by ID.
       operationId: getRuleById
@@ -159,16 +231,37 @@ paths:
           format: int64
           required: true
       responses:
-        '200':
-          description: success
+        200:
+          description: Rule successfully retrieved
           schema:
             $ref: '#/definitions/Rule'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+
+responses:
+  Unauthorized:
+    description: Unauthorized, make sure you authentified using your apiKey
+  Forbidden:
+    description: Forbidden access, you cannot access this data
+  BadRequest:
+    description: Bad Request
+  Conflict:
+    description: Conflict, element already exists
+  NotFound:
+    description: Requested element not found
 
 definitions:
   Rule:
     type: object
     properties:
       id:
+        type: integer
+        format: int64
+      owner:
         type: integer
         format: int64
       if:
@@ -218,6 +311,9 @@ definitions:
       id:
         type: integer
         format: int64
+      owner:
+        type: integer
+        format: int64
       name:
         type: string
       image:
@@ -233,6 +329,9 @@ definitions:
     type: object
     properties:
       id:
+        type: integer
+        format: int64
+      owner:
         type: integer
         format: int64
       name:

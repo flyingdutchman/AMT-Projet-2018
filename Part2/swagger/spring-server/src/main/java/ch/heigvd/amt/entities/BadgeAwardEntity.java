@@ -19,6 +19,7 @@ public class BadgeAwardEntity implements Serializable {
 
     private Long userId;
     private Long badgeId;
+    private Long owner;
     private DateTime timestamp;
 
     public Long getId() {
@@ -39,6 +40,14 @@ public class BadgeAwardEntity implements Serializable {
 
     public Long getBadgeId() {
         return badgeId;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 
     public void setBadgeId(Long badgeId) {

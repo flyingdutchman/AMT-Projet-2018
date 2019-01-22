@@ -2,20 +2,16 @@ package ch.heigvd.amt.api.endpoints;
 
 import ch.heigvd.amt.api.EventsApi;
 import ch.heigvd.amt.api.model.Event;
-import ch.heigvd.amt.entities.BadgeAwardEntity;
-import ch.heigvd.amt.entities.PointsAwardEntity;
-import ch.heigvd.amt.entities.RuleEntity;
-import ch.heigvd.amt.entities.ForeignUserEntity;
-import ch.heigvd.amt.repositories.BadgeAwardRepository;
-import ch.heigvd.amt.repositories.PointsAwardRepository;
-import ch.heigvd.amt.repositories.RuleRepository;
-import ch.heigvd.amt.repositories.ForeignUserRepository;
+import ch.heigvd.amt.api.util.ApiResponseBuilder;
+import ch.heigvd.amt.entities.*;
+import ch.heigvd.amt.repositories.*;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-07-26T19:36:34.802Z")
 
@@ -34,49 +30,72 @@ public class EventsApiController implements EventsApi {
     BadgeAwardRepository badgeAwardRepository;
     @Autowired
     PointsAwardRepository pointsAwardRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
-    public ResponseEntity<Object> sendEvent(@ApiParam(value = "", required = true) @RequestBody Event event) {
+    public ResponseEntity<Object> sendEvent(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @RequestBody Event event) {
+
+        UserEntity userEntity = getUser(apiKey);
+
+        if (userEntity == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
 
         //Find the rules that have this event type and apply them
         for (RuleEntity r : ruleRepository.findAll()) {
-            if (r.getType().equals(event.getType())) {
+            if (r.getType().equals(event.getType()) && r.getOwner() == userEntity.getId()) {
 
                 //Get the user
-                ForeignUserEntity user = null;
-                for (ForeignUserEntity ue : foreignUserRepository.findAll()) {
-                    if (ue.getApplicationUserId().equals(event.getUserId())) {
-                        user = ue;
+                ForeignUserEntity foreignUser = null;
+                for (ForeignUserEntity fue : foreignUserRepository.findAll()) {
+                    if (fue.getApplicationUserId().equals(event.getUserId()) && fue.getOwner() == userEntity.getId()) {
+                        foreignUser = fue;
                         break;
                     }
                 }
-                if (user == null) {
-                    return new ResponseEntity<>((Object) "UserId not found", HttpStatus.NOT_FOUND);
+                if (foreignUser == null) {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
 
-                // Add the badges and points
+                // Add the badge and points
                 if (r.getAwardBadge() != null) {
-                    user.addOwnedBadge(r.getAwardBadge());
-                    // Record Reward
-                    BadgeAwardEntity badgeAwardEntity = new BadgeAwardEntity();
-                    badgeAwardEntity.setBadgeId(r.getAwardBadge());
-                    badgeAwardEntity.setTimestamp(event.getTimestamp());
-                    badgeAwardEntity.setUserId(user.getId());
-                    badgeAwardRepository.save(badgeAwardEntity);
+                    // Record Reward and If the badge is not already owned, add it
+                    boolean hasCreatedBadge = foreignUser.addOwnedBadge(r.getAwardBadge());
+                    if (hasCreatedBadge) {
+                        // And record the award event
+                        BadgeAwardEntity badgeAwardEntity = new BadgeAwardEntity();
+                        badgeAwardEntity.setBadgeId(r.getAwardBadge());
+                        badgeAwardEntity.setTimestamp(event.getTimestamp());
+                        badgeAwardEntity.setUserId(foreignUser.getId());
+                        badgeAwardEntity.setOwner(userEntity.getId());
+                        badgeAwardRepository.save(badgeAwardEntity);
+                    }
                 }
                 if (r.getPointScale() != null) {
-                    user.addPointScaleProgress(r.getPointScale(), r.getAmount());
+                    foreignUser.addPointScaleProgress(r.getPointScale(), r.getAmount());
                     // Record Reward
                     PointsAwardEntity pointsAwardEntity = new PointsAwardEntity();
                     pointsAwardEntity.setAmount(r.getAmount());
                     pointsAwardEntity.setPointScaleId(r.getPointScale());
                     pointsAwardEntity.setTimestamp(event.getTimestamp());
-                    pointsAwardEntity.setUserId(user.getId());
+                    pointsAwardEntity.setUserId(foreignUser.getId());
+                    pointsAwardEntity.setOwner(userEntity.getId());
                 }
             }
 
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private UserEntity getUser(String apiKey) {
+        UserEntity userEntity = null;
+        for (UserEntity ue : userRepository.findAll()) {
+            if (ue.getApiKey() == apiKey) {
+                userEntity = ue;
+            }
+        }
+        return userEntity;
     }
 }
