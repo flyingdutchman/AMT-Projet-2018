@@ -38,7 +38,7 @@ public class BadgeSteps {
 
     @Given("^I have a badge payload$")
     public void i_have_a_badge_payload() {
-        badgeWithoutId = new ch.heigvd.amt.api.dto.BadgeWithoutId();
+        badgeWithoutId = new BadgeWithoutId();
         int num = cnt++;
         badgeWithoutId.setName("Badge " + num);
         badgeWithoutId.setImage("image" + num + ".png");
@@ -53,9 +53,9 @@ public class BadgeSteps {
         }
     }
 
-    @Then("^I receive a (\\d+) status code$")
-    public void i_receive_a_status_code(int arg1) {
-        assertEquals(arg1, lastStatusCode);
+    @Then("^I receive a (\\d+) status code from the /badges endpoint$")
+    public void i_receive_a_status_code(int code) {
+        assertEquals(code, lastStatusCode);
     }
 
     @And("^The newly created badge$")
@@ -108,12 +108,12 @@ public class BadgeSteps {
         assertTrue(o instanceof Badge);
     }
 
-    @When("^I GET the /badge/id endpoint$")
-    public void iGETTheBadgeIdEndpoint() {
+    @When("^I GET the /badges/id endpoint$")
+    public void iGETTheBadgesIdEndpoint() {
         assertTrue(lastApiResponse.getData() instanceof Badge);
         Badge badge = (Badge) (lastApiResponse.getData());
         try {
-            apiSuccessBehaviour(api.getBadgesByIdWithHttpInfo(badge.getId()));
+            apiSuccessBehaviour(api.getBadgeByIdWithHttpInfo(badge.getId()));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -124,6 +124,13 @@ public class BadgeSteps {
         assertTrue(lastApiResponse.getData() instanceof Badge);
         Badge badge = (Badge) lastApiResponse.getData();
         assertEquals(badgeWithoutId.getName(), badge.getName());
+    }
+
+    @Given("^I have an incorrect badge payload$")
+    public void iHaveAnIncorrectBadgePayload() {
+        badgeWithoutId = new BadgeWithoutId();
+        int num = cnt++;
+        badgeWithoutId.setName("Badge " + num);
     }
 
     private void apiSuccessBehaviour(ApiResponse apiResponse) {
@@ -138,12 +145,5 @@ public class BadgeSteps {
         lastApiResponse = null;
         lastApiException = e;
         lastStatusCode = lastApiException.getCode();
-    }
-
-    @Given("^I have an incorrect badge payload$")
-    public void iHaveAnIncorrectBadgePayload() {
-        badgeWithoutId = new ch.heigvd.amt.api.dto.BadgeWithoutId();
-        int num = cnt++;
-        badgeWithoutId.setName("Badge " + num);
     }
 }

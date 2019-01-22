@@ -78,7 +78,7 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Badge> getBadgesById(@ApiParam(value = "", required = true) @PathVariable("badgeId") Long badgeId) {
+    public ResponseEntity<Badge> getBadgeById(@ApiParam(value = "", required = true) @PathVariable("badgeId") Long badgeId) {
         BadgeEntity badge = badgeRepository.findOne(badgeId);
         if (badge == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

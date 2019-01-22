@@ -40,7 +40,7 @@ paths:
   /badges/{badgeId}:
     get:
       description: Gets a badge by ID.
-      operationId: getBadgesById
+      operationId: getBadgeById
       produces:
         - application/json
       parameters:
