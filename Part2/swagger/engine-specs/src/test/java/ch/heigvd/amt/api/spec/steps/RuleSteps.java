@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 public class RuleSteps {
 
-    private static int cnt = 0;
     private DefaultApi api;
     private RuleWithoutId ruleWithoutId;
     private ApiResponse lastApiResponse;
