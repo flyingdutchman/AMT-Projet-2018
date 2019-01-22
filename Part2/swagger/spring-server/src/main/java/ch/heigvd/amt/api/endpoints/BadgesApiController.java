@@ -3,6 +3,7 @@ package ch.heigvd.amt.api.endpoints;
 import ch.heigvd.amt.api.BadgesApi;
 import ch.heigvd.amt.api.model.Badge;
 import ch.heigvd.amt.api.model.BadgeWithoutId;
+import ch.heigvd.amt.api.util.ApiHeaderBuilder;
 import ch.heigvd.amt.entities.BadgeEntity;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +30,13 @@ public class BadgesApiController implements BadgesApi {
 
     @Override
     public ResponseEntity<Badge> createBadge(@ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
+
+        if(badge.getImage() == null || badge.getName() == null) {
+            String message = "The 'name' and 'image' field are mandatory";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
+            responseHeaders.set("Error-Message", ", please correct your requset");
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
+        }
 
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         BadgeEntity foundDouble = null;

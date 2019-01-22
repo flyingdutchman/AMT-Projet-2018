@@ -139,4 +139,11 @@ public class BadgeSteps {
         lastApiException = e;
         lastStatusCode = lastApiException.getCode();
     }
+
+    @Given("^I have an incorrect badge payload$")
+    public void iHaveAnIncorrectBadgePayload() {
+        badgeWithoutId = new ch.heigvd.amt.api.dto.BadgeWithoutId();
+        int num = cnt++;
+        badgeWithoutId.setName("Badge " + num);
+    }
 }

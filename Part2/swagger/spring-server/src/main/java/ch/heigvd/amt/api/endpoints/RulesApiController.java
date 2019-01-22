@@ -2,6 +2,7 @@ package ch.heigvd.amt.api.endpoints;
 
 import ch.heigvd.amt.api.RulesApi;
 import ch.heigvd.amt.api.model.*;
+import ch.heigvd.amt.api.util.ApiHeaderBuilder;
 import ch.heigvd.amt.entities.RuleEntity;
 import ch.heigvd.amt.repositories.RuleRepository;
 import io.swagger.annotations.ApiParam;
@@ -28,34 +29,34 @@ public class RulesApiController implements RulesApi {
 
     @Override
     public ResponseEntity<Rule> createRule(@ApiParam(value = "", required = true) @RequestBody RuleWithoutId rule) {
-        RuleWithoutIdThen ruleThen = rule.getThen();
-        RuleWithoutIdIf ruleIf = rule.getIf();
+        RuleThen ruleThen = rule.getThen();
+        RuleIf ruleIf = rule.getIf();
 
         if (ruleThen == null || ruleIf == null) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Error-Message", "The 'If' and 'Then' field are mandatory, please correct your requset");
+            String message = "The 'if' and 'then' field are mandatory";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         if (ruleIf.getType() == null) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Error-Message", "The 'type' field in 'If' is mandatory, please correct your requset");
+            String message = "The 'type' field in 'if' is mandatory";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
-        RuleWithoutIdThenAwardPoints thenAwardPts = ruleThen.getAwardPoints();
+        RuleThenAwardPoints thenAwardPts = ruleThen.getAwardPoints();
 
         // If there is nothing in Then
         if (thenAwardPts == null && ruleThen.getAwardBadgeId() == null) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Error-Message", "The 'amount' and 'pointScale' fields of 'awardPoints are mandatory'");
+            String message = "At least one of the 'awardBadgeId' or 'awardPoints' should be informed";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         // If AwardPoints exist and one of its field is missing
         if (thenAwardPts != null && (thenAwardPts.getPointScaleId() == null || thenAwardPts.getAmount() == null)) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Error-Message", "The 'type' field in 'If' is mandatory, please correct your requset");
+            String message = "The 'amount' and 'pointScaleId' fields of 'awardPoints are mandatory'";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
@@ -109,14 +110,14 @@ public class RulesApiController implements RulesApi {
         Rule rule = new Rule();
         rule.setId(entity.getId());
 
-        RuleWithoutIdIf ruleIf = new RuleWithoutIdIf();
+        RuleIf ruleIf = new RuleIf();
         ruleIf.setType(entity.getType());
         rule.setIf(ruleIf);
 
-        RuleWithoutIdThen ruleThen = new RuleWithoutIdThen();
+        RuleThen ruleThen = new RuleThen();
         ruleThen.setAwardBadgeId(entity.getAwardBadge());
 
-        RuleWithoutIdThenAwardPoints ruleThenAwardPoints = new RuleWithoutIdThenAwardPoints();
+        RuleThenAwardPoints ruleThenAwardPoints = new RuleThenAwardPoints();
         ruleThenAwardPoints.setPointScaleId(entity.getPointScale());
         ruleThenAwardPoints.setAmount(entity.getAmount());
         ruleThen.setAwardPoints(ruleThenAwardPoints);

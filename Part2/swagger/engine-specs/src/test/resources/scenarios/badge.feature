@@ -33,6 +33,11 @@ Feature: Badges Management
     When I GET the /badge/id endpoint
     Then I receive a 200 status code
     And The badge corresponding to the given id
+    
+  Scenario: It is not possible to create a badge with false syntax
+    Given I have an incorrect badge payload
+    When I POST it to the /badges endpoint
+    Then I receive a 400 status code
 
 
 
