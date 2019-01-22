@@ -29,6 +29,7 @@ public class BadgeSteps {
 
     public BadgeSteps(Environment environment) {
         this.api = environment.getApi();
+
     }
 
     @Given("^there is a Badges server$")

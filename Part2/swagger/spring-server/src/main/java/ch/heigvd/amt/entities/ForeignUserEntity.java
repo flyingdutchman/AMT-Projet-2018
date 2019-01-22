@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Entity
-public class UserEntity implements Serializable {
+public class ForeignUserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

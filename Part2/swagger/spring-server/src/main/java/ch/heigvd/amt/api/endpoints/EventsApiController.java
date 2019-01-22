@@ -5,11 +5,11 @@ import ch.heigvd.amt.api.model.Event;
 import ch.heigvd.amt.entities.BadgeAwardEntity;
 import ch.heigvd.amt.entities.PointsAwardEntity;
 import ch.heigvd.amt.entities.RuleEntity;
-import ch.heigvd.amt.entities.UserEntity;
+import ch.heigvd.amt.entities.ForeignUserEntity;
 import ch.heigvd.amt.repositories.BadgeAwardRepository;
 import ch.heigvd.amt.repositories.PointsAwardRepository;
 import ch.heigvd.amt.repositories.RuleRepository;
-import ch.heigvd.amt.repositories.UserRepository;
+import ch.heigvd.amt.repositories.ForeignUserRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class EventsApiController implements EventsApi {
     @Autowired
     RuleRepository ruleRepository;
     @Autowired
-    UserRepository userRepository;
+    ForeignUserRepository foreignUserRepository;
     @Autowired
     BadgeAwardRepository badgeAwardRepository;
     @Autowired
@@ -43,8 +43,8 @@ public class EventsApiController implements EventsApi {
             if (r.getType().equals(event.getType())) {
 
                 //Get the user
-                UserEntity user = null;
-                for (UserEntity ue : userRepository.findAll()) {
+                ForeignUserEntity user = null;
+                for (ForeignUserEntity ue : foreignUserRepository.findAll()) {
                     if (ue.getApplicationUserId().equals(event.getUserId())) {
                         user = ue;
                         break;
