@@ -31,25 +31,24 @@ public class BadgesApiController implements BadgesApi {
     @Override
     public ResponseEntity<Badge> createBadge(@ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
 
-        if(badge.getImage() == null || badge.getName() == null) {
-            String message = "The 'name' and 'image' field are mandatory";
+        if (badge.getImage() == null || badge.getName() == null) {
+            String message = "The 'name' and 'image' fields are mandatory";
             HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
-            responseHeaders.set("Error-Message", ", please correct your requset");
             return ResponseEntity.badRequest().headers(responseHeaders).build();
         }
 
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         BadgeEntity foundDouble = null;
-        for(BadgeEntity be : badgeRepository.findAll()) {
-            if(be.getName().equals(newBadgeEntity.getName())) {
+        for (BadgeEntity be : badgeRepository.findAll()) {
+            if (be.getName().equals(newBadgeEntity.getName())) {
                 foundDouble = be;
                 break;
             }
         }
 
-        if(foundDouble != null) {
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Error-Message", "A badge with the same name already exists : ");
+        if (foundDouble != null) {
+            String message = "A badge with the same name already exists : ";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(foundDouble.getId())

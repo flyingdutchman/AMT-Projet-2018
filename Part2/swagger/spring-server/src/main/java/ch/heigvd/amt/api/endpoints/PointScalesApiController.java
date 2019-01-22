@@ -3,10 +3,13 @@ package ch.heigvd.amt.api.endpoints;
 import ch.heigvd.amt.api.PointScalesApi;
 import ch.heigvd.amt.api.model.PointScale;
 import ch.heigvd.amt.api.model.PointScaleWithoutId;
+import ch.heigvd.amt.api.util.ApiHeaderBuilder;
 import ch.heigvd.amt.entities.PointScaleEntity;
 import ch.heigvd.amt.repositories.PointScaleRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +30,35 @@ public class PointScalesApiController implements PointScalesApi {
 
     @Override
     public ResponseEntity<PointScale> createPointScale(@ApiParam(value = "", required = true) @RequestBody PointScaleWithoutId pointScale) {
+
+        if (pointScale.getDescription() == null || pointScale.getName() == null) {
+            String message = "The 'name' and 'description' fields are mandatory";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
+            return ResponseEntity.badRequest().headers(responseHeaders).build();
+        }
+
         PointScaleEntity newPointScalEntity = toPointScaleEntity(pointScale);
+        PointScaleEntity foundDouble = null;
+
+        for (PointScaleEntity pe : pointScaleRepository.findAll()) {
+            if (pe.getName().equals(newPointScalEntity.getName())) {
+                foundDouble = pe;
+                break;
+            }
+        }
+
+        if (foundDouble != null) {
+            String message = "A pointScale with the same name already exists : ";
+            HttpHeaders responseHeaders = ApiHeaderBuilder.errorMessage(message);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(foundDouble.getId())
+                    .toUri();
+            return ResponseEntity.status(HttpStatus.CONFLICT).headers(responseHeaders).location(location).build();
+        }
+
         pointScaleRepository.save(newPointScalEntity);
         Long id = newPointScalEntity.getId();
-
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newPointScalEntity.getId())

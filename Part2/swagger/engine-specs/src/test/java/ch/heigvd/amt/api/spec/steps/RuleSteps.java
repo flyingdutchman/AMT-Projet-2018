@@ -16,15 +16,13 @@ import static org.junit.Assert.*;
 
 public class RuleSteps {
 
+    private static int cnt = 0;
     private DefaultApi api;
-
     private RuleWithoutId ruleWithoutId;
-
     private ApiResponse lastApiResponse;
     private ApiException lastApiException;
     private boolean lastApiCallThrewException;
     private int lastStatusCode;
-    private static int cnt = 0;
 
     public RuleSteps(Environment environment) {
         this.api = environment.getApi();
@@ -148,6 +146,9 @@ public class RuleSteps {
         assertTrue(lastApiResponse.getData() instanceof Rule);
         Rule rule = (Rule) lastApiResponse.getData();
         assertEquals(ruleWithoutId.getIf().getType(), rule.getIf().getType());
+        assertEquals(ruleWithoutId.getThen().getAwardBadgeId(), rule.getThen().getAwardBadgeId());
+        assertEquals(ruleWithoutId.getThen().getAwardPoints().getPointScaleId(), rule.getThen().getAwardPoints().getPointScaleId());
+        assertEquals(ruleWithoutId.getThen().getAwardPoints().getAmount(), rule.getThen().getAwardPoints().getAmount());
     }
 
     @Given("^I have an incorrect rule payload$")
