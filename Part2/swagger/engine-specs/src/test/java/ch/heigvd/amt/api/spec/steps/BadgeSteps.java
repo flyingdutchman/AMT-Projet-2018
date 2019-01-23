@@ -40,6 +40,12 @@ public class BadgeSteps extends Steps {
         apiKey = "APIKEY";
     }
 
+    @And("^Having the same API keys$")
+    public void HavingTheSameAPIKeys() {
+        apiKey = "APIKEY";
+        apiKeyTwo = "APIKEY2";
+    }
+
     @When("^I POST it to the /badges endpoint$")
     public void i_POST_it_to_the_badges_endpoint() {
         try {
@@ -81,8 +87,8 @@ public class BadgeSteps extends Steps {
         assertNotEquals(found, null);
     }
 
-    @Given("^There is at least one badge in the repository$")
-    public void thereIsAtLeastOneBadgeInTheRepository() {
+    @Given("^There are two badges in the repositories$")
+    public void thereAreTwoBadgesInTheRepositories() {
         BadgeWithoutId badgeWithoutIdOne = new BadgeWithoutId();
         badgeWithoutIdOne.setName("Badge One");
         badgeWithoutIdOne.setImage("imageOne.png");

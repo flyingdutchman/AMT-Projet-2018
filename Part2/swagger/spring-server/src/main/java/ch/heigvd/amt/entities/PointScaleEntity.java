@@ -15,7 +15,7 @@ public class PointScaleEntity implements Serializable {
 
     private String name;
     private String description;
-    private Long owner;
+    private String apiKey;
 
     public long getId() {
         return id;
@@ -49,11 +49,11 @@ public class PointScaleEntity implements Serializable {
         this.description = description;
     }
 
-    public Long getOwner() {
-        return owner;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public void setOwner(Long owner) {
-        this.owner = owner;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 }

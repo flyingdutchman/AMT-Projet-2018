@@ -3,10 +3,10 @@ package ch.heigvd.amt.api.endpoints;
 import ch.heigvd.amt.api.RulesApi;
 import ch.heigvd.amt.api.model.*;
 import ch.heigvd.amt.api.util.ApiResponseBuilder;
+import ch.heigvd.amt.entities.ApiKeyEntity;
 import ch.heigvd.amt.entities.RuleEntity;
-import ch.heigvd.amt.entities.UserEntity;
+import ch.heigvd.amt.repositories.ApiKeyRepository;
 import ch.heigvd.amt.repositories.RuleRepository;
-import ch.heigvd.amt.repositories.UserRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,14 +29,16 @@ public class RulesApiController implements RulesApi {
     @Autowired
     RuleRepository ruleRepository;
     @Autowired
-    UserRepository userRepository;
+    ApiKeyRepository apiKeyRepository;
 
     @Override
     public ResponseEntity<Rule> createRule(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @RequestBody RuleWithoutId rule) {
 
-        UserEntity userEntity = getUser(apiKey);
+        if (apiKey == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
 
-        if (userEntity == null) {
+        if(!findKey(apiKey)) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
 
@@ -63,10 +65,9 @@ public class RulesApiController implements RulesApi {
             return ApiResponseBuilder.badRequestMessage("The 'amount' and 'pointScaleId' fields of 'awardPoints are mandatory'");
         }
 
-        RuleEntity newRuleEntity = toRuleEntity(rule, userEntity.getId());
+        RuleEntity newRuleEntity = toRuleEntity(rule, apiKey);
         ruleRepository.save(newRuleEntity);
         Long id = newRuleEntity.getId();
-
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newRuleEntity.getId())
@@ -77,15 +78,17 @@ public class RulesApiController implements RulesApi {
 
     @Override
     public ResponseEntity<Rule> getRuleById(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @PathVariable("ruleId") Long ruleId) {
-        UserEntity userEntity = getUser(apiKey);
-        if (userEntity == null) {
+        if (apiKey == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
+        if(!findKey(apiKey)) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
         RuleEntity ruleEntity = ruleRepository.findOne(ruleId);
         if (ruleEntity == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (ruleEntity.getOwner() != userEntity.getId()) {
+        if (!ruleEntity.getApiKey().equals(apiKey)) {
             return ApiResponseBuilder.forbiddenMessage();
         }
         return ResponseEntity.ok(toRule(ruleEntity));
@@ -93,20 +96,22 @@ public class RulesApiController implements RulesApi {
 
     @Override
     public ResponseEntity<List<Rule>> getAllRules(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
-        UserEntity userEntity = getUser(apiKey);
-        if (userEntity == null) {
+        if (apiKey == null) {
             return ApiResponseBuilder.forbiddenMessage();
+        }
+        if(!findKey(apiKey)) {
+            return ApiResponseBuilder.unauthorizedMessage();
         }
         List<Rule> rules = new ArrayList<>();
         for (RuleEntity re : ruleRepository.findAll()) {
-            if(re.getOwner() == userEntity.getId()) {
+            if(re.getApiKey().equals(apiKey)) {
                 rules.add(toRule(re));
             }
         }
         return ResponseEntity.ok(rules);
     }
 
-    private RuleEntity toRuleEntity(RuleWithoutId rule, Long owner) {
+    private RuleEntity toRuleEntity(RuleWithoutId rule, String apiKey) {
         RuleEntity entity = new RuleEntity();
         entity.setType(rule.getIf().getType());
         entity.setAwardBadge(rule.getThen().getAwardBadgeId());
@@ -114,7 +119,7 @@ public class RulesApiController implements RulesApi {
             entity.setPointScale(rule.getThen().getAwardPoints().getPointScaleId());
             entity.setAmount(rule.getThen().getAwardPoints().getAmount());
         }
-        entity.setOwner(owner);
+        entity.setApiKey(apiKey);
         return entity;
     }
 
@@ -134,18 +139,16 @@ public class RulesApiController implements RulesApi {
         ruleThenAwardPoints.setAmount(entity.getAmount());
         ruleThen.setAwardPoints(ruleThenAwardPoints);
         rule.setThen(ruleThen);
-        rule.setOwner(entity.getOwner());
 
         return rule;
     }
 
-    private UserEntity getUser(String apiKey) {
-        UserEntity userEntity = null;
-        for (UserEntity ue : userRepository.findAll()) {
-            if (ue.getApiKey() == apiKey) {
-                userEntity = ue;
+    private boolean findKey(String key) {
+        for(ApiKeyEntity ake : apiKeyRepository.findAll()) {
+            if(ake.getApiKey().equals(key)) {
+                return true;
             }
         }
-        return userEntity;
+        return false;
     }
 }

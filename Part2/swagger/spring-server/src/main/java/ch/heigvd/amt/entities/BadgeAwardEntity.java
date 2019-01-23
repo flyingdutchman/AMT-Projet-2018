@@ -19,7 +19,7 @@ public class BadgeAwardEntity implements Serializable {
 
     private Long userId;
     private Long badgeId;
-    private Long owner;
+    private String apiKey;
     private DateTime timestamp;
 
     public Long getId() {
@@ -50,12 +50,12 @@ public class BadgeAwardEntity implements Serializable {
         return badgeId;
     }
 
-    public Long getOwner() {
-        return owner;
+    public String getApiKey() {
+        return apiKey;
     }
 
-    public void setOwner(Long owner) {
-        this.owner = owner;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public void setBadgeId(Long badgeId) {

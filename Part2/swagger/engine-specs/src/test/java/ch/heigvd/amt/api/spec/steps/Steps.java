@@ -9,6 +9,7 @@ class Steps {
 
     DefaultApi api;
     String apiKey;
+    String apiKeyTwo;
     ApiResponse lastApiResponse;
     ApiException lastApiException;
     boolean lastApiCallThrewException;

@@ -46,7 +46,7 @@ public class EventSteps extends Steps {
     public void iReceiveAStatusCodeFromTheEventsEndpoint(int code) {
         assertEquals(code, lastStatusCode);
     }
-    
+
 
     @And("^A Badge online$")
     public void aBadgeOnline() {
