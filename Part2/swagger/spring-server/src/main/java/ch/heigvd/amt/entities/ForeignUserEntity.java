@@ -1,9 +1,6 @@
 package ch.heigvd.amt.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +11,9 @@ public class ForeignUserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Version
+    private Long version;
 
     private String applicationUserId;
     private Long owner;
@@ -26,6 +26,14 @@ public class ForeignUserEntity implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getApplicationUserId() {

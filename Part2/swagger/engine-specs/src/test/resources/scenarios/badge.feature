@@ -5,6 +5,7 @@ Feature: Badges Management
 
   Scenario: Create a new badge
     Given I have a badge payload
+    And An API key
     When I POST it to the /badges endpoint
     Then I receive a 201 status code from the /badges endpoint
     And The newly created badge

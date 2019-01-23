@@ -1,8 +1,6 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
-import ch.heigvd.amt.ApiResponse;
-import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.Badge;
 import ch.heigvd.amt.api.dto.BadgeWithoutId;
 import ch.heigvd.amt.api.spec.helpers.Environment;
@@ -15,21 +13,13 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class BadgeSteps {
+public class BadgeSteps extends Steps {
 
-    private DefaultApi api;
-
+    private static int cnt = 0;
     private BadgeWithoutId badgeWithoutId;
 
-    private ApiResponse lastApiResponse;
-    private ApiException lastApiException;
-    private boolean lastApiCallThrewException;
-    private int lastStatusCode;
-    private static int cnt = 0;
-
     public BadgeSteps(Environment environment) {
-        this.api = environment.getApi();
-
+        super(environment);
     }
 
     @Given("^there is a Badges server$")
@@ -45,10 +35,15 @@ public class BadgeSteps {
         badgeWithoutId.setImage("image" + num + ".png");
     }
 
+    @And("^An API key$")
+    public void anAPIKey() {
+        apiKey = "APIKEY";
+    }
+
     @When("^I POST it to the /badges endpoint$")
     public void i_POST_it_to_the_badges_endpoint() {
         try {
-            apiSuccessBehaviour(api.createBadgeWithHttpInfo(badgeWithoutId));
+            apiSuccessBehaviour(api.createBadgeWithHttpInfo(apiKey, badgeWithoutId));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -67,7 +62,7 @@ public class BadgeSteps {
     @When("^I ask for a list of registered badges with a GET on the /badges endpoint$")
     public void iAskForAListOfRegisteredBadgesWithAGETOnTheBadgesEndpoint() {
         try {
-            apiSuccessBehaviour(api.getAllBadgesWithHttpInfo());
+            apiSuccessBehaviour(api.getAllBadgesWithHttpInfo(apiKey));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -95,8 +90,8 @@ public class BadgeSteps {
         badgeWithoutIdTwo.setName("Badge Two");
         badgeWithoutIdTwo.setImage("imageTwo.png");
         try {
-            api.createBadgeWithHttpInfo(badgeWithoutIdOne);
-            api.createBadgeWithHttpInfo(badgeWithoutIdTwo);
+            api.createBadgeWithHttpInfo(apiKey, badgeWithoutIdOne);
+            api.createBadgeWithHttpInfo(apiKey, badgeWithoutIdTwo);
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -114,7 +109,7 @@ public class BadgeSteps {
         assertTrue(lastApiResponse.getData() instanceof Badge);
         Badge badge = (Badge) (lastApiResponse.getData());
         try {
-            apiSuccessBehaviour(api.getBadgeByIdWithHttpInfo(badge.getId()));
+            apiSuccessBehaviour(api.getBadgeByIdWithHttpInfo(apiKey, badge.getId()));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -132,19 +127,5 @@ public class BadgeSteps {
         badgeWithoutId = new BadgeWithoutId();
         int num = cnt++;
         badgeWithoutId.setName("Badge " + num);
-    }
-
-    private void apiSuccessBehaviour(ApiResponse apiResponse) {
-        lastApiResponse = apiResponse;
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiResponse.getStatusCode();
-    }
-
-    private void apiExceptionBehaviour(ApiException e) {
-        lastApiCallThrewException = true;
-        lastApiResponse = null;
-        lastApiException = e;
-        lastStatusCode = lastApiException.getCode();
     }
 }

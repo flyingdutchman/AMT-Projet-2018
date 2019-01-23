@@ -1,8 +1,6 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
-import ch.heigvd.amt.ApiResponse;
-import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.*;
 import ch.heigvd.amt.api.spec.helpers.Environment;
 import cucumber.api.java.en.And;
@@ -14,17 +12,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class RuleSteps {
+public class RuleSteps extends Steps {
 
-    private DefaultApi api;
     private RuleWithoutId ruleWithoutId;
-    private ApiResponse lastApiResponse;
-    private ApiException lastApiException;
-    private boolean lastApiCallThrewException;
-    private int lastStatusCode;
 
     public RuleSteps(Environment environment) {
-        this.api = environment.getApi();
+        super(environment);
     }
 
     @Given("^there is a Rule server$")
@@ -50,7 +43,7 @@ public class RuleSteps {
     @When("^I POST it to the /rules endpoint$")
     public void iPOSTItToTheRulesEndpoint() {
         try {
-            apiSuccessBehaviour(api.createRuleWithHttpInfo(ruleWithoutId));
+            apiSuccessBehaviour(api.createRuleWithHttpInfo(apiKey, ruleWithoutId));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -93,8 +86,8 @@ public class RuleSteps {
         ruleWithoutIdTwo.setThen(ruleThenTwo);
 
         try {
-            api.createRuleWithHttpInfo(ruleWithoutIdOne);
-            api.createRuleWithHttpInfo(ruleWithoutIdTwo);
+            api.createRuleWithHttpInfo(apiKey, ruleWithoutIdOne);
+            api.createRuleWithHttpInfo(apiKey, ruleWithoutIdTwo);
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -103,7 +96,7 @@ public class RuleSteps {
     @When("^I ask for a list of registered rules with a GET on the /rules endpoint$")
     public void iAskForAListOfRegisteredRulesWithAGETOnTheRulesEndpoint() {
         try {
-            apiSuccessBehaviour(api.getAllRulesWithHttpInfo());
+            apiSuccessBehaviour(api.getAllRulesWithHttpInfo(apiKey));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -134,7 +127,7 @@ public class RuleSteps {
         assertTrue(lastApiResponse.getData() instanceof Rule);
         Rule rule = (Rule) (lastApiResponse.getData());
         try {
-            apiSuccessBehaviour(api.getRuleByIdWithHttpInfo(rule.getId()));
+            apiSuccessBehaviour(api.getRuleByIdWithHttpInfo(apiKey, rule.getId()));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -156,19 +149,5 @@ public class RuleSteps {
         RuleIf ruleIf = new RuleIf();
         ruleIf.setType("This is broken");
         ruleWithoutId.setIf(ruleIf);
-    }
-
-    private void apiSuccessBehaviour(ApiResponse apiResponse) {
-        lastApiResponse = apiResponse;
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiResponse.getStatusCode();
-    }
-
-    private void apiExceptionBehaviour(ApiException e) {
-        lastApiCallThrewException = true;
-        lastApiResponse = null;
-        lastApiException = e;
-        lastStatusCode = lastApiException.getCode();
     }
 }

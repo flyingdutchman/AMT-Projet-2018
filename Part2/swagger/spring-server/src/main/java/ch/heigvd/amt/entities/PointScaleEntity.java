@@ -1,9 +1,6 @@
 package ch.heigvd.amt.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -12,6 +9,9 @@ public class PointScaleEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Version
+    private Long version;
 
     private String name;
     private String description;
@@ -23,6 +23,14 @@ public class PointScaleEntity implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getName() {

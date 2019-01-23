@@ -1,9 +1,6 @@
 package ch.heigvd.amt.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -15,6 +12,9 @@ public class BadgeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     private String name;
     private String image;
     private Long owner;
@@ -25,6 +25,14 @@ public class BadgeEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getName() {

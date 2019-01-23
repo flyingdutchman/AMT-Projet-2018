@@ -2,10 +2,7 @@ package ch.heigvd.amt.entities;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -16,6 +13,9 @@ public class BadgeAwardEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    private Long version;
 
     private Long userId;
     private Long badgeId;
@@ -32,6 +32,14 @@ public class BadgeAwardEntity implements Serializable {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public void setUserId(Long userId) {

@@ -1,8 +1,6 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
-import ch.heigvd.amt.ApiResponse;
-import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.PointScale;
 import ch.heigvd.amt.api.dto.PointScaleWithoutId;
 import ch.heigvd.amt.api.spec.helpers.Environment;
@@ -15,18 +13,13 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class PointScaleSteps {
+public class PointScaleSteps extends Steps {
 
     private static int cnt = 0;
-    private DefaultApi api;
     private PointScaleWithoutId pointScaleWithoutId;
-    private ApiResponse lastApiResponse;
-    private ApiException lastApiException;
-    private boolean lastApiCallThrewException;
-    private int lastStatusCode;
 
     public PointScaleSteps(Environment environment) {
-        this.api = environment.getApi();
+        super(environment);
     }
 
     @Given("^there is a PointScale server$")
@@ -45,7 +38,7 @@ public class PointScaleSteps {
     @When("^I POST it to the /pointScales endpoint$")
     public void iPOSTItToThePointScalesEndpoint() {
         try {
-            apiSuccessBehaviour(api.createPointScaleWithHttpInfo(pointScaleWithoutId));
+            apiSuccessBehaviour(api.createPointScaleWithHttpInfo(apiKey, pointScaleWithoutId));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -70,8 +63,8 @@ public class PointScaleSteps {
         pointScaleTwo.setName("Two");
         pointScaleTwo.setDescription("TwoDesc");
         try {
-            api.createPointScaleWithHttpInfo(pointScaleOne);
-            api.createPointScaleWithHttpInfo(pointScaleTwo);
+            api.createPointScaleWithHttpInfo(apiKey, pointScaleOne);
+            api.createPointScaleWithHttpInfo(apiKey, pointScaleTwo);
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -80,7 +73,7 @@ public class PointScaleSteps {
     @When("^I ask for a list of registered pointScales with a GET on the /pointScales endpoint$")
     public void iAskForAListOfRegisteredPointScalesWithAGETOnThePointScalesEndpoint() {
         try {
-            apiSuccessBehaviour(api.getAllPointScalesWithHttpInfo());
+            apiSuccessBehaviour(api.getAllPointScalesWithHttpInfo(apiKey));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -111,7 +104,7 @@ public class PointScaleSteps {
         assertTrue(lastApiResponse.getData() instanceof PointScale);
         PointScale pointScale = (PointScale) (lastApiResponse.getData());
         try {
-            apiSuccessBehaviour(api.getPointScaleByIdWithHttpInfo(pointScale.getId()));
+            apiSuccessBehaviour(api.getPointScaleByIdWithHttpInfo(apiKey, pointScale.getId()));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -129,21 +122,5 @@ public class PointScaleSteps {
     public void iHaveAnIncorrectPointScalePayload() {
         pointScaleWithoutId = new PointScaleWithoutId();
         pointScaleWithoutId.setName("Incorrect");
-    }
-
-
-    private void apiSuccessBehaviour(ApiResponse apiResponse) {
-        lastApiResponse = apiResponse;
-        lastApiCallThrewException = false;
-        lastApiException = null;
-        lastStatusCode = lastApiResponse.getStatusCode();
-    }
-
-    private void apiExceptionBehaviour(ApiException e) {
-        lastApiCallThrewException = true;
-        lastApiResponse = null;
-        lastApiException = e;
-        lastStatusCode = lastApiException.getCode();
-
     }
 }
