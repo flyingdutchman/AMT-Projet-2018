@@ -55,6 +55,8 @@ public class ApplicationApiController implements ApplicationsApi {
     private Application toApplication(ApplicationEntity entity) {
         Application app = new Application();
         app.setOwner(entity.getOwner());
+        app.setApiKey(entity.getApiKey());
+        app.setId(entity.getId());
         return app;
     }
 
