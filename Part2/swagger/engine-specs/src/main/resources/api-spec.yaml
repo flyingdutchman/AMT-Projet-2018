@@ -84,6 +84,19 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
+    delete:
+      description: Deletes a badge by ID.
+      operationId: deleteBadgeById
+      parameters:
+        - in: path
+          name: badgeId
+          type: integer
+          format: int64
+          required: true
+      responses:
+        204:
+          description: Badge successfully deleted
+
   /pointScales:
     parameters:
       - $ref: '#/parameters/apiParam'
@@ -241,7 +254,25 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
-
+  /applications:
+    post:
+      description: create an application
+      operationId: createApplication
+      consumes:
+        - application/json
+      parameters:
+        - name: application
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationWithoutId'
+      responses:
+        201:
+          description: Application successfully created
+          schema:
+            $ref: '#/definitions/Application'
+        400:
+          $ref: '#/responses/BadRequest'
 responses:
   Unauthorized:
     description: Unauthorized, make sure you authentified using your apiKey
@@ -255,10 +286,30 @@ responses:
     description: Requested element not found
 
 definitions:
+  ApplicationWithoutId:
+    type: object
+    properties:
+      owner:
+        type: integer
+        format: int64
+  Application:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      owner:
+        type: integer
+        format: int64
+      apiKey:
+        type: string
   Rule:
     type: object
     properties:
       id:
+        type: integer
+        format: int64
+      appId:
         type: integer
         format: int64
       if:
@@ -312,6 +363,9 @@ definitions:
         type: string
       image:
         type: string
+      appId:
+        type: integer
+        format: int64
   BadgeWithoutId:
     type: object
     properties:
@@ -329,6 +383,9 @@ definitions:
         type: string
       description:
         type: string
+      appId:
+        type: integer
+        format: int64
   PointScaleWithoutId:
     type: object
     properties:

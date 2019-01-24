@@ -31,26 +31,24 @@ public class EventsApiController implements EventsApi {
     @Autowired
     PointsAwardRepository pointsAwardRepository;
     @Autowired
-    ApiKeyRepository apiKeyRepository;
+    ApplicationRepository applicationRepository;
 
     @Override
     public ResponseEntity<Object> sendEvent(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @RequestBody Event event) {
 
-        if (apiKey == null) {
-            return ApiResponseBuilder.unauthorizedMessage();
-        }
-        if(!findKey(apiKey)) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
 
         //Find the rules that have this event type and apply them
         for (RuleEntity r : ruleRepository.findAll()) {
-            if (r.getType().equals(event.getType()) && r.getApiKey().equals(apiKey)) {
+            if (r.getType().equals(event.getType()) && r.getApplicationId().equals(appId)) {
 
                 //Get the user
                 ForeignUserEntity foreignUser = null;
                 for (ForeignUserEntity fue : foreignUserRepository.findAll()) {
-                    if (fue.getApplicationUserId().equals(event.getUserId()) && fue.getApiKey().equals(apiKey)) {
+                    if (fue.getApplicationUserId().equals(event.getUserId()) && fue.getApplicationId().equals(appId)) {
                         foreignUser = fue;
                         break;
                     }
@@ -68,8 +66,8 @@ public class EventsApiController implements EventsApi {
                         BadgeAwardEntity badgeAwardEntity = new BadgeAwardEntity();
                         badgeAwardEntity.setBadgeId(r.getAwardBadge());
                         badgeAwardEntity.setTimestamp(event.getTimestamp());
-                        badgeAwardEntity.setUserId(foreignUser.getId());
-                        badgeAwardEntity.setApiKey(apiKey);
+                        badgeAwardEntity.setForeignUserId(foreignUser.getId());
+                        badgeAwardEntity.setApplicationId(appId);
                         badgeAwardRepository.save(badgeAwardEntity);
                     }
                 }
@@ -80,8 +78,8 @@ public class EventsApiController implements EventsApi {
                     pointsAwardEntity.setAmount(r.getAmount());
                     pointsAwardEntity.setPointScaleId(r.getPointScale());
                     pointsAwardEntity.setTimestamp(event.getTimestamp());
-                    pointsAwardEntity.setUserId(foreignUser.getId());
-                    pointsAwardEntity.setApiKey(apiKey);
+                    pointsAwardEntity.setForeignUserId(foreignUser.getId());
+                    pointsAwardEntity.setApplicationId(appId);
                 }
             }
 
@@ -89,12 +87,18 @@ public class EventsApiController implements EventsApi {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean findKey(String key) {
-        for(ApiKeyEntity ake : apiKeyRepository.findAll()) {
+    private Long getAppId(String apiKey) {
+        if(apiKey == null)
+            return null;
+        return findKey(apiKey);
+    }
+
+    private Long findKey(String key) {
+        for(ApplicationEntity ake : applicationRepository.findAll()) {
             if(ake.getApiKey().equals(key)) {
-                return true;
+                return ake.getId();
             }
         }
-        return false;
+        return null;
     }
 }

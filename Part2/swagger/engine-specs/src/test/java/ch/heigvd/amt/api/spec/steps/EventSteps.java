@@ -1,6 +1,8 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
+import ch.heigvd.amt.ApiResponse;
+import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.Event;
 import ch.heigvd.amt.api.spec.helpers.Environment;
 import cucumber.api.java.en.And;
@@ -12,12 +14,19 @@ import org.joda.time.DateTime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class EventSteps extends Steps {
+public class EventSteps {
 
+    private DefaultApi api;
+    private String apiKey;
+    private String apiKeyTwo;
+    private ApiResponse lastApiResponse;
+    private ApiException lastApiException;
+    private boolean lastApiCallThrewException;
+    private int lastStatusCode;
     private Event event;
 
     public EventSteps(Environment environment) {
-        super(environment);
+        api = environment.getApi();
     }
 
     @Given("^there is a running api$")
@@ -65,5 +74,19 @@ public class EventSteps extends Steps {
     @And("^The correct pointScales were given$")
     public void theCorrectPointScalesWereGiven() {
 
+    }
+
+    void apiSuccessBehaviour(ApiResponse apiResponse) {
+        lastApiResponse = apiResponse;
+        lastApiCallThrewException = false;
+        lastApiException = null;
+        lastStatusCode = lastApiResponse.getStatusCode();
+    }
+
+    void apiExceptionBehaviour(ApiException e) {
+        lastApiCallThrewException = true;
+        lastApiResponse = null;
+        lastApiException = e;
+        lastStatusCode = lastApiException.getCode();
     }
 }

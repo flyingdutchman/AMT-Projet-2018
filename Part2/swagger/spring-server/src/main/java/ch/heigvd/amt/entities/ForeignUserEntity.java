@@ -16,7 +16,7 @@ public class ForeignUserEntity implements Serializable {
     private Long version;
 
     private String applicationUserId;
-    private String apiKey;
+    private Long applicationId;
     private ArrayList<Long> badgeOwned;
     private HashMap<Long, Integer> pointScaleProgress;
 
@@ -44,12 +44,12 @@ public class ForeignUserEntity implements Serializable {
         this.applicationUserId = applicationUserId;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public ArrayList<Long> getBadgeOwned() {

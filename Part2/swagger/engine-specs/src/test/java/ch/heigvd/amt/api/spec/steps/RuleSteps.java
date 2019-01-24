@@ -1,6 +1,8 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
+import ch.heigvd.amt.ApiResponse;
+import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.*;
 import ch.heigvd.amt.api.spec.helpers.Environment;
 import cucumber.api.java.en.And;
@@ -12,12 +14,19 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class RuleSteps extends Steps {
+public class RuleSteps {
 
+    private DefaultApi api;
+    private String apiKey;
+    private String apiKeyTwo;
+    private ApiResponse lastApiResponse;
+    private ApiException lastApiException;
+    private boolean lastApiCallThrewException;
+    private int lastStatusCode;
     private RuleWithoutId ruleWithoutId;
 
     public RuleSteps(Environment environment) {
-        super(environment);
+        api = environment.getApi();
     }
 
     @Given("^there is a Rule server$")
@@ -149,5 +158,19 @@ public class RuleSteps extends Steps {
         RuleIf ruleIf = new RuleIf();
         ruleIf.setType("This is broken");
         ruleWithoutId.setIf(ruleIf);
+    }
+
+    void apiSuccessBehaviour(ApiResponse apiResponse) {
+        lastApiResponse = apiResponse;
+        lastApiCallThrewException = false;
+        lastApiException = null;
+        lastStatusCode = lastApiResponse.getStatusCode();
+    }
+
+    void apiExceptionBehaviour(ApiException e) {
+        lastApiCallThrewException = true;
+        lastApiResponse = null;
+        lastApiException = e;
+        lastStatusCode = lastApiException.getCode();
     }
 }

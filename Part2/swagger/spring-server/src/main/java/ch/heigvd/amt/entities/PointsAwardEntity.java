@@ -17,11 +17,11 @@ public class PointsAwardEntity implements Serializable {
     @Version
     private Long version;
 
-    private Long userId;
+    private Long foreignUserId;
     private Long pointScaleId;
     private Integer amount;
     private DateTime timestamp;
-    private String apiKey;
+    private Long applicationId;
 
     public Long getId() {
         return id;
@@ -39,12 +39,12 @@ public class PointsAwardEntity implements Serializable {
         this.version = version;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getForeignUserId() {
+        return foreignUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setForeignUserId(Long foreignUserId) {
+        this.foreignUserId = foreignUserId;
     }
 
     public Long getPointScaleId() {
@@ -71,11 +71,11 @@ public class PointsAwardEntity implements Serializable {
         this.timestamp = timestamp;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }

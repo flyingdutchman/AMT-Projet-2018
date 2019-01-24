@@ -1,6 +1,8 @@
 package ch.heigvd.amt.api.spec.steps;
 
 import ch.heigvd.amt.ApiException;
+import ch.heigvd.amt.ApiResponse;
+import ch.heigvd.amt.api.DefaultApi;
 import ch.heigvd.amt.api.dto.PointScale;
 import ch.heigvd.amt.api.dto.PointScaleWithoutId;
 import ch.heigvd.amt.api.spec.helpers.Environment;
@@ -13,13 +15,20 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class PointScaleSteps extends Steps {
+public class PointScaleSteps {
 
+    private DefaultApi api;
+    private String apiKey;
+    private String apiKeyTwo;
+    private ApiResponse lastApiResponse;
+    private ApiException lastApiException;
+    private boolean lastApiCallThrewException;
+    private int lastStatusCode;
     private static int cnt = 0;
     private PointScaleWithoutId pointScaleWithoutId;
 
     public PointScaleSteps(Environment environment) {
-        super(environment);
+        api = environment.getApi();
     }
 
     @Given("^there is a PointScale server$")
@@ -122,5 +131,19 @@ public class PointScaleSteps extends Steps {
     public void iHaveAnIncorrectPointScalePayload() {
         pointScaleWithoutId = new PointScaleWithoutId();
         pointScaleWithoutId.setName("Incorrect");
+    }
+
+    void apiSuccessBehaviour(ApiResponse apiResponse) {
+        lastApiResponse = apiResponse;
+        lastApiCallThrewException = false;
+        lastApiException = null;
+        lastStatusCode = lastApiResponse.getStatusCode();
+    }
+
+    void apiExceptionBehaviour(ApiException e) {
+        lastApiCallThrewException = true;
+        lastApiResponse = null;
+        lastApiException = e;
+        lastStatusCode = lastApiException.getCode();
     }
 }

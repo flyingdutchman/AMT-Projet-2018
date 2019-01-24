@@ -4,9 +4,9 @@ import ch.heigvd.amt.api.BadgesApi;
 import ch.heigvd.amt.api.model.Badge;
 import ch.heigvd.amt.api.model.BadgeWithoutId;
 import ch.heigvd.amt.api.util.ApiResponseBuilder;
-import ch.heigvd.amt.entities.ApiKeyEntity;
+import ch.heigvd.amt.entities.ApplicationEntity;
 import ch.heigvd.amt.entities.BadgeEntity;
-import ch.heigvd.amt.repositories.ApiKeyRepository;
+import ch.heigvd.amt.repositories.ApplicationRepository;
 import ch.heigvd.amt.repositories.BadgeRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import springfox.documentation.service.ApiKey;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -31,16 +30,13 @@ public class BadgesApiController implements BadgesApi {
     @Autowired
     BadgeRepository badgeRepository;
     @Autowired
-    ApiKeyRepository apiKeyRepository;
+    ApplicationRepository applicationRepository;
 
     @Override
     public ResponseEntity<Badge> createBadge(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @RequestBody BadgeWithoutId badge) {
 
-        if (apiKey == null) {
-            return ApiResponseBuilder.unauthorizedMessage();
-        }
-
-        if(!findKey(apiKey)) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
 
@@ -48,10 +44,10 @@ public class BadgesApiController implements BadgesApi {
             return ApiResponseBuilder.badRequestMessage("The 'name' and 'image' fields are mandatory");
         }
 
-        BadgeEntity newBadgeEntity = toBadgeEntity(badge, apiKey);
+        BadgeEntity newBadgeEntity = toBadgeEntity(badge, appId);
         BadgeEntity foundDouble = null;
         for (BadgeEntity be : badgeRepository.findAll()) {
-            if (be.getApiKey().equals(newBadgeEntity.getApiKey()) && be.getName().equals(newBadgeEntity.getName())) {
+            if (be.getApplicationId().equals(appId) && be.getName().equals(newBadgeEntity.getName())) {
                 foundDouble = be;
                 break;
             }
@@ -77,16 +73,31 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<List<Badge>> getAllBadges(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
-        if (apiKey == null) {
+    public ResponseEntity<Void> deleteBadgeById(String apiKey, Long badgeId) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
-        if(!findKey(apiKey)) {
+        BadgeEntity badge = badgeRepository.findOne(badgeId);
+        if (badge == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!badge.getApplicationId().equals(appId)) {
+            return ApiResponseBuilder.forbiddenMessage();
+        }
+        badgeRepository.delete(badgeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<Badge>> getAllBadges(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
         List<Badge> badges = new ArrayList<>();
         for (BadgeEntity badgeEntity : badgeRepository.findAll()) {
-            if (badgeEntity.getApiKey().equals(apiKey)) {
+            if (badgeEntity.getApplicationId().equals(appId)) {
                 badges.add(toBadge(badgeEntity));
             }
         }
@@ -95,27 +106,25 @@ public class BadgesApiController implements BadgesApi {
 
     @Override
     public ResponseEntity<Badge> getBadgeById(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey, @ApiParam(value = "", required = true) @PathVariable("badgeId") Long badgeId) {
-        if (apiKey == null) {
-            return ApiResponseBuilder.unauthorizedMessage();
-        }
-        if(!findKey(apiKey)) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
             return ApiResponseBuilder.unauthorizedMessage();
         }
         BadgeEntity badge = badgeRepository.findOne(badgeId);
         if (badge == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!badge.getApiKey().equals(apiKey)) {
+        if (!badge.getApplicationId().equals(appId)) {
             return ApiResponseBuilder.forbiddenMessage();
         }
         return ResponseEntity.ok(toBadge(badge));
     }
 
-    private BadgeEntity toBadgeEntity(BadgeWithoutId badge, String apiKey) {
+    private BadgeEntity toBadgeEntity(BadgeWithoutId badge, Long appId) {
         BadgeEntity entity = new BadgeEntity();
         entity.setName(badge.getName());
         entity.setImage(badge.getImage());
-        entity.setApiKey(apiKey);
+        entity.setApplicationId(appId);
         return entity;
     }
 
@@ -124,15 +133,22 @@ public class BadgesApiController implements BadgesApi {
         badge.setId(entity.getId());
         badge.setName(entity.getName());
         badge.setImage(entity.getImage());
+        badge.setAppId(entity.getApplicationId());
         return badge;
     }
 
-    private boolean findKey(String key) {
-        for(ApiKeyEntity ake : apiKeyRepository.findAll()) {
+    private Long getAppId(String apiKey) {
+        if(apiKey == null)
+            return null;
+        return findKey(apiKey);
+    }
+
+    private Long findKey(String key) {
+        for(ApplicationEntity ake : applicationRepository.findAll()) {
             if(ake.getApiKey().equals(key)) {
-                return true;
+                return ake.getId();
             }
         }
-        return false;
+        return null;
     }
 }

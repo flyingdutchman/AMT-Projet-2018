@@ -17,7 +17,7 @@ public class BadgeEntity implements Serializable {
 
     private String name;
     private String image;
-    private String apiKey;
+    private Long applicationId;
 
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class BadgeEntity implements Serializable {
         this.image = image;
     }
 
-    public String getApiKey() {
-        return apiKey;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 }
