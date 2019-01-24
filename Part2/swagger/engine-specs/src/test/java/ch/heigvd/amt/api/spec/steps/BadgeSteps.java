@@ -3,38 +3,47 @@ package ch.heigvd.amt.api.spec.steps;
 import ch.heigvd.amt.ApiException;
 import ch.heigvd.amt.ApiResponse;
 import ch.heigvd.amt.api.DefaultApi;
-import ch.heigvd.amt.api.dto.Application;
 import ch.heigvd.amt.api.dto.ApplicationWithoutId;
 import ch.heigvd.amt.api.dto.Badge;
 import ch.heigvd.amt.api.dto.BadgeWithoutId;
 import ch.heigvd.amt.api.spec.helpers.Environment;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class CreateBadgeSteps {
+public class BadgeSteps {
+
+    private static int cnt = 0;
 
     private DefaultApi api;
     private ApplicationWithoutId appOne;
     private ApplicationWithoutId appTwo;
     private ApplicationWithoutId appThree;
-    private String apiKey;
+    private String apiKeyOne;
     private String apiKeyTwo;
     private String apiKeyThree;
     private ApiResponse lastApiResponse;
     private ApiException lastApiException;
-    boolean lastApiCallThrewException;
-    int lastStatusCode;
-    private static int cnt = 0;
+    private boolean lastApiCallThrewException;
+    private int lastStatusCode;
+    private String falseApiKey = "iamfalse";
     private BadgeWithoutId badgeWithoutId;
 
-    public CreateBadgeSteps(Environment environment) {
+    private ArrayList<Pair<Long, String>> badgesToDelete;
+
+
+    public BadgeSteps(Environment environment) {
         api = environment.getApi();
+        badgesToDelete = new ArrayList<>();
     }
 
 
@@ -56,7 +65,7 @@ public class CreateBadgeSteps {
     @And("^i populate the server with them and get their respective Apikeys$")
     public void iPopulateTheServerWithThemAndGetTheirRespectiveApikeys() {
         try {
-            apiKey = api.createApplication(appOne).getApiKey();
+            apiKeyOne = api.createApplication(appOne).getApiKey();
             apiKeyTwo = api.createApplication(appTwo).getApiKey();
             apiKeyThree = api.createApplication(appThree).getApiKey();
         } catch (ApiException e) {
@@ -72,10 +81,14 @@ public class CreateBadgeSteps {
         badgeWithoutId.setImage("image" + num + ".png");
     }
 
-    @When("^i POST it to the /badges endpoint$")
-    public void i_POST_it_to_the_badges_endpoint() {
+    @When("^i POST it to the /badges endpoint with (KeyA|KeyB|KeyC|FakeKey|no Key)$")
+    public void iPOSTItToTheBadgesEndpointWith(String apiKeyName) {
+        String apiKey = getApiKeyByName(apiKeyName);
         try {
-            apiSuccessBehaviour(api.createBadgeWithHttpInfo(apiKey, badgeWithoutId));
+            ApiResponse apiResponse = api.createBadgeWithHttpInfo(apiKey, badgeWithoutId);
+            badgesToDelete.add(new Pair<>(getIdFromResponse(apiResponse), apiKey));
+            apiResponse.getHeaders().get("location");
+            apiSuccessBehaviour(apiResponse);
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -91,10 +104,10 @@ public class CreateBadgeSteps {
         assertTrue(lastApiResponse.getData() instanceof Badge);
     }
 
-    @When("^i ask for a list of registered badges with a GET on the /badges endpoint$")
-    public void iAskForAListOfRegisteredBadgesWithAGETOnTheBadgesEndpoint() {
+    @When("^i GET the list of badges owned by (AppA|AppB|AppC) on the /badges/id endpoint$")
+    public void iGETTheListOfBadgesOwnedByOnTheBadgesIdEndpoint(String app) {
         try {
-            apiSuccessBehaviour(api.getAllBadgesWithHttpInfo(apiKey));
+            apiSuccessBehaviour(api.getAllBadgesWithHttpInfo(getApiKeyByName(app)));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -113,8 +126,8 @@ public class CreateBadgeSteps {
         assertNotEquals(found, null);
     }
 
-    @Given("^there are two badges in the repositories$")
-    public void thereAreTwoBadgesInTheRepositories() {
+    @Given("^there are two badges in the repositories owned by (AppA|AppB|AppC) and (AppA|AppB|AppC)$")
+    public void thereAreTwoBadgesInTheRepositories(String app1, String app2) {
         BadgeWithoutId badgeWithoutIdOne = new BadgeWithoutId();
         badgeWithoutIdOne.setName("Badge One");
         badgeWithoutIdOne.setImage("imageOne.png");
@@ -122,8 +135,10 @@ public class CreateBadgeSteps {
         badgeWithoutIdTwo.setName("Badge Two");
         badgeWithoutIdTwo.setImage("imageTwo.png");
         try {
-            api.createBadgeWithHttpInfo(apiKey, badgeWithoutIdOne);
-            api.createBadgeWithHttpInfo(apiKey, badgeWithoutIdTwo);
+            ApiResponse apiRes = api.createBadgeWithHttpInfo(app1, badgeWithoutIdOne);
+            badgesToDelete.add(new Pair<>(getIdFromResponse(apiRes), app1));
+            apiRes = api.createBadgeWithHttpInfo(app2, badgeWithoutIdTwo);
+            badgesToDelete.add(new Pair<>(getIdFromResponse(apiRes), app2));
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -136,8 +151,8 @@ public class CreateBadgeSteps {
         assertTrue(o instanceof Badge);
     }
 
-    @When("^i GET the /badges/id endpoint$")
-    public void iGETTheBadgesIdEndpoint() {
+    @When("^i GET the /badges/id endpoint with (KeyA|KeyB|KeyC|FakeKey|no Key)$")
+    public void iGETTheBadgesIdEndpointWith(String apiKey) {
         assertTrue(lastApiResponse.getData() instanceof Badge);
         Badge badge = (Badge) (lastApiResponse.getData());
         try {
@@ -161,6 +176,20 @@ public class CreateBadgeSteps {
         badgeWithoutId.setName("Badge " + num);
     }
 
+//    @After
+//    public void cleanUp() {
+//        //TODO delete the 3 apps
+//
+//        // Delete the created badges
+//        for (Pair<Long, String> p : badgesToDelete) {
+//            try {
+//                api.deleteBadgeById(p.getValue(), p.getKey());
+//            } catch (ApiException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
     void apiSuccessBehaviour(ApiResponse apiResponse) {
         lastApiResponse = apiResponse;
         lastApiCallThrewException = false;
@@ -168,10 +197,35 @@ public class CreateBadgeSteps {
         lastStatusCode = lastApiResponse.getStatusCode();
     }
 
-    void apiExceptionBehaviour(ApiException e) {
+    private void apiExceptionBehaviour(ApiException e) {
         lastApiCallThrewException = true;
         lastApiResponse = null;
         lastApiException = e;
         lastStatusCode = lastApiException.getCode();
+    }
+
+    private Long getIdFromResponse(ApiResponse apiResponse) {
+        Map headers = apiResponse.getHeaders();
+        List list = (List) headers.get("Location");
+        String location = (String) list.get(0);
+        String sub = location.substring(location.lastIndexOf('/') + 1);
+        return Long.valueOf(sub);
+    }
+
+    private String getApiKeyByName(String name) {
+        switch (name) {
+            case "AppA":
+            case "KeyA":
+                return apiKeyOne;
+            case "AppB":
+            case "KeyB":
+                return apiKeyTwo;
+            case "AppC":
+            case "KeyC":
+                return apiKeyThree;
+            case "FakeKey":
+                return falseApiKey;
+        }
+        return null;
     }
 }
