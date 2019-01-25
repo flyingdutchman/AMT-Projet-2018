@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Part1/AMT-Project.iml" filepath="$PROJECT_DIR$/Part1/AMT-Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AMT-Projet-2018.iml" filepath="$PROJECT_DIR$/.idea/AMT-Projet-2018.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Part2/swagger/spring-server/swagger-spring.iml" filepath="$PROJECT_DIR$/Part2/swagger/spring-server/swagger-spring.iml" />
+    </modules>
+  </component>
+</project>

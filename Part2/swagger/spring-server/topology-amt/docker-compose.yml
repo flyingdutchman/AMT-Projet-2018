@@ -2,7 +2,9 @@ version: '3'
 services:
   spring:
     build:
-      context: ../
+      context: ../images/spring
+    depends_on:
+      - 'mysql'
     links:
       - mysql:db
     ports:
@@ -10,20 +12,15 @@ services:
     networks:
       - 'default'
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
   mysql:
-    build: ../images/mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: mysql:5.7
     environment:
-      MYSQL_DATABASE: springuser
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: amt_engine
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
     ports:
      - "3306:3306"
     networks:
       - 'default'
-    volumes:
-      - my-db:/var/lib/mysql
-
-volumes:
-  my-db:
