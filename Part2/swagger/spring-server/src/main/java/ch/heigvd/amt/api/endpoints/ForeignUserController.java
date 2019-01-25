@@ -108,6 +108,54 @@ public class ForeignUserController implements UsersApi {
         return ResponseEntity.ok(toUser(entity));
     }
 
+    @Override
+    public ResponseEntity<User> updateUserById(@ApiParam(value = "The API key header" ,required=true ) @RequestHeader(value="apiKey", required=true) String apiKey,
+                                               @ApiParam(value = "",required=true ) @PathVariable("userId") Long userId,
+                                               @ApiParam(value = "" ,required=true ) @RequestBody UserWithoutId user) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
+
+        if (user.getAppId() == null || user.getForeignId() == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'foreignId' and 'appId' fields are mandatory");
+        }
+
+        ForeignUserEntity newEntity = toForeignUserEntity(user, appId);
+        ForeignUserEntity oldEntity = foreignUserRepository.findOne(userId);
+        if (oldEntity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!oldEntity.getApplicationId().equals(appId)) {
+            return ApiResponseBuilder.forbiddenMessage();
+        }
+        ForeignUserEntity foundDouble = null;
+        for (ForeignUserEntity fue : foreignUserRepository.findAll()) {
+            if (fue.getApplicationId().equals(appId) && fue.getForeignId().equals(newEntity.getForeignId())) {
+                foundDouble = fue;
+                break;
+            }
+        }
+        if (foundDouble != null) {
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(foundDouble.getId())
+                    .toUri();
+            return ApiResponseBuilder.conflictMessage(location);
+        }
+
+        newEntity.setId(oldEntity.getId());
+        foreignUserRepository.save(newEntity);
+        Long id = newEntity.getId();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newEntity.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(toUser(newEntity));
+    }
+
     private ForeignUserEntity toForeignUserEntity(UserWithoutId userWithoutId, Long appId) {
         ForeignUserEntity entity = new ForeignUserEntity();
         entity.setForeignId(userWithoutId.getForeignId());

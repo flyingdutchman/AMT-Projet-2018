@@ -84,6 +84,39 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
+    put:
+      description: Updates a badge by ID
+      operationId: updateBadgeById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: badgeId
+          type: integer
+          format: int64
+          required: true
+        - name: badge
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BadgeWithoutId'
+      responses:
+        200:
+          description: Badge successfully updated
+          schema:
+            $ref: '#/definitions/Badge'
+        201:
+          description: Badge successfully created
+          schema:
+            $ref: '#/definitions/Badge'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /pointScales:
     parameters:
       - $ref: '#/parameters/apiParam'
@@ -146,6 +179,39 @@ paths:
           description: PointScale successfully retrieved
           schema:
             $ref: '#/definitions/PointScale'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      description: Updates a PointScale by ID
+      operationId: updatePointScaleById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: pointScaleId
+          type: integer
+          format: int64
+          required: true
+        - name: pointScale
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointScaleWithoutId'
+      responses:
+        200:
+          description: PointScale successfully updated
+          schema:
+            $ref: '#/definitions/PointScale'
+        201:
+          description: PointScale successfully created
+          schema:
+            $ref: '#/definitions/PointScale'
+        400:
+          $ref: '#/responses/BadRequest'
         401:
           $ref: '#/responses/Unauthorized'
         403:
@@ -241,6 +307,39 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
+    put:
+      description: Updates a Rule by ID
+      operationId: updateRuleById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: ruleId
+          type: integer
+          format: int64
+          required: true
+        - name: rule
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RuleWithoutId'
+      responses:
+        200:
+          description: Rule successfully updated
+          schema:
+            $ref: '#/definitions/Rule'
+        201:
+          description: Rule successfully created
+          schema:
+            $ref: '#/definitions/Rule'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /applications:
     post:
       description: create an application
@@ -273,6 +372,39 @@ paths:
       responses:
         204:
           description: Badge successfully deleted
+    put:
+      description: Updates a Application by ID
+      operationId: updateAppById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: appId
+          type: integer
+          format: int64
+          required: true
+        - name: application
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationWithoutId'
+      responses:
+        200:
+          description: Application successfully updated
+          schema:
+            $ref: '#/definitions/Application'
+        201:
+          description: Application successfully created
+          schema:
+            $ref: '#/definitions/Application'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /users:
     parameters:
       - $ref: '#/parameters/apiParam'
@@ -333,6 +465,39 @@ paths:
           description: User successfully retrieved
           schema:
             $ref: '#/definitions/User'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      description: Updates a User by ID
+      operationId: updateUserById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+        - name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithoutId'
+      responses:
+        200:
+          description: User successfully updated
+          schema:
+            $ref: '#/definitions/User'
+        201:
+          description: User successfully created
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          $ref: '#/responses/BadRequest'
         401:
           $ref: '#/responses/Unauthorized'
         403:

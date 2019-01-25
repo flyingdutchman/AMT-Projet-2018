@@ -89,6 +89,54 @@ public class PointScalesApiController implements PointScalesApi {
     }
 
     @Override
+    public ResponseEntity<PointScale> updatePointScaleById(@ApiParam(value = "The API key header" ,required=true ) @RequestHeader(value="apiKey", required=true) String apiKey,
+                                                           @ApiParam(value = "",required=true ) @PathVariable("pointScaleId") Long pointScaleId,
+                                                           @ApiParam(value = "" ,required=true ) @RequestBody PointScaleWithoutId pointScale) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
+
+        if (pointScale.getDescription() == null || pointScale.getName() == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'name' and 'description' fields are mandatory");
+        }
+
+        PointScaleEntity newEntity = toPointScaleEntity(pointScale, appId);
+        PointScaleEntity oldEntity = pointScaleRepository.findOne(pointScaleId);
+        if (oldEntity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!oldEntity.getApplicationId().equals(appId)) {
+            return ApiResponseBuilder.forbiddenMessage();
+        }
+        PointScaleEntity foundDouble = null;
+        for (PointScaleEntity pe : pointScaleRepository.findAll()) {
+            if (pe.getApplicationId().equals(appId) && pe.getName().equals(newEntity.getName())) {
+                foundDouble = pe;
+                break;
+            }
+        }
+        if (foundDouble != null) {
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(foundDouble.getId())
+                    .toUri();
+            return ApiResponseBuilder.conflictMessage(location);
+        }
+
+        newEntity.setId(oldEntity.getId());
+        pointScaleRepository.save(newEntity);
+        Long id = newEntity.getId();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newEntity.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(toPointScale(newEntity));
+    }
+
+    @Override
     public ResponseEntity<List<PointScale>> getAllPointScales(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
         Long appId = getAppId(apiKey);
         if (appId == null) {

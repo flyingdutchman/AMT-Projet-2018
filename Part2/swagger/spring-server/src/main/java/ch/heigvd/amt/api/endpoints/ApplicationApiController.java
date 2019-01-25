@@ -87,6 +87,12 @@ public class ApplicationApiController implements ApplicationsApi {
         return ResponseEntity.noContent().build();
     }
 
+    @Override
+    public ResponseEntity<Application> updateAppById(@ApiParam(value = "",required=true ) @PathVariable("appId") Long appId,
+                                                     @ApiParam(value = "" ,required=true ) @RequestBody ApplicationWithoutId application) {
+        return null;
+    }
+
     private ApplicationEntity toApplicationEntity(ApplicationWithoutId application) {
         ApplicationEntity entity = new ApplicationEntity();
         entity.setOwner(application.getOwner());

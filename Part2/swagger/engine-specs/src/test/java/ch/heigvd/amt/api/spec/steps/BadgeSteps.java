@@ -47,9 +47,9 @@ public class BadgeSteps {
         stemAppOne = new ApplicationWithoutId();
         stemAppTwo = new ApplicationWithoutId();
         stemAppThree = new ApplicationWithoutId();
-        stemAppOne.setOwner(1L);
-        stemAppTwo.setOwner(1L);
-        stemAppThree.setOwner(2L);
+        stemAppOne.setOwner(Long.MAX_VALUE);
+        stemAppTwo.setOwner(Long.MAX_VALUE);
+        stemAppThree.setOwner(Long.MAX_VALUE-1);
     }
 
     @And("^i populate the server with them and get their respective Apikeys$")
@@ -66,15 +66,14 @@ public class BadgeSteps {
     @Given("^i have a badge payload$")
     public void i_have_a_badge_payload() {
         badgeWithoutId = new BadgeWithoutId();
-        badgeWithoutId.setName("Badge ");
+        badgeWithoutId.setName("Badge");
         badgeWithoutId.setImage("image.png");
     }
 
     @When("^i POST it to the /badges endpoint with (Key[ABC]|FakeKey)$")
     public void iPOSTItToTheBadgesEndpointWith(String apiKeyName) {
-        String apiKey = getApiKeyByName(apiKeyName);
         try {
-            apiSuccessBehaviour(api.createBadgeWithHttpInfo(apiKey, badgeWithoutId));
+            apiSuccessBehaviour(api.createBadgeWithHttpInfo(getApiKeyByName(apiKeyName), badgeWithoutId));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }
@@ -95,7 +94,7 @@ public class BadgeSteps {
         assertNotNull(lastApiException.getResponseHeaders().get("Location"));
     }
 
-    @When("^i GET the list of badges owned by (App[ABC]|FakeApp) on the /badges/id endpoint$")
+    @When("^i GET the list of badges owned by (App[ABC]|FakeApp) on the /badges endpoint$")
     public void iGETTheListOfBadgesOwnedByOnTheBadgesIdEndpoint(String app) {
         try {
             apiSuccessBehaviour(api.getAllBadgesWithHttpInfo(getApiKeyByName(app)));
@@ -116,6 +115,7 @@ public class BadgeSteps {
         }
         assertNotEquals(found, null);
     }
+
     @Given("^there (?:are|is) (\\d+) badge(?:s?) in the repository owned by (App[ABC](?:,App[ABC])*)$")
     public void thereAreBadgesInTheRepositoriesOwnedByAppA(int nbBadges, String apps) {
         String[] appsArray = apps.split(",");
@@ -139,10 +139,9 @@ public class BadgeSteps {
         assertEquals(size, list.size());
         Object o = list.get(0);
         assertTrue(o instanceof Badge);
-
     }
 
-    @When("^i GET last's step badge on the /badges/id endpoint with (Key[ABC]|FakeKey)$")
+    @When("^i GET lasts step badge on the /badges/id endpoint with (Key[ABC]|FakeKey)$")
     public void iGETTheBadgesIdEndpointWith(String apiKey) {
         assertTrue(lastApiResponse.getData() instanceof Badge);
         Badge badge = (Badge) (lastApiResponse.getData());
@@ -175,15 +174,48 @@ public class BadgeSteps {
         badgeWithoutId.setName("Faux Badge");
     }
 
+    @And("^there is a badge in the repository owned by (App[ABC]|FakeApp)$")
+    public void thereIsABadgeInTheRepositoryOwnedBy(String apiApp) {
+        try {
+            BadgeWithoutId badgeWithoutId = new BadgeWithoutId();
+            badgeWithoutId.setName("OldBadge");
+            badgeWithoutId.setImage("OldImage.png");
+            apiSuccessBehaviour(api.createBadgeWithHttpInfo(getApiKeyByName(apiApp), badgeWithoutId));
+        } catch (ApiException e) {
+            apiExceptionBehaviour(e);
+        }
+    }
+
+    @When("^i PUT the payload into the lasts step /badges/id endpoint with (Key[ABC]|FakeKey)$")
+    public void iPUTThePayloadIntoTheLastsStepBadgesIdEndpointWith(String apiKey) {
+        assertTrue(lastApiResponse.getData() instanceof Badge);
+        Badge badge = (Badge) (lastApiResponse.getData());
+        try {
+            apiSuccessBehaviour(api.updateBadgeByIdWithHttpInfo(getApiKeyByName(apiKey), badge.getId(), badgeWithoutId));
+        } catch (ApiException e) {
+            apiExceptionBehaviour(e);
+        }
+    }
+
+    @When("^i PUT the payload to a unknown /badges/id endpoint with KeyA$")
+    public void iPUTThePayloadToAUnknownBadgesIdEndpointWithKeyA() {
+        try {
+            apiSuccessBehaviour(api.updateBadgeByIdWithHttpInfo(appOne.getApiKey(), Long.MAX_VALUE, badgeWithoutId));
+        } catch (ApiException e) {
+            apiExceptionBehaviour(e);
+        }
+    }
+
     @After
     public void cleanUp() {
-
-        try {
-            api.deleteAppById(appOne.getId());
-            api.deleteAppById(appTwo.getId());
-            api.deleteAppById(appThree.getId());
-        } catch (ApiException e) {
-            e.printStackTrace();
+        if(api!= null && appOne != null && appTwo != null && appThree != null) {
+            try {
+                api.deleteAppById(appOne.getId());
+                api.deleteAppById(appTwo.getId());
+                api.deleteAppById(appThree.getId());
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
         }
     }
 
