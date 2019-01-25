@@ -22,3 +22,7 @@ ouvrir une ligne de commande dans le dossier topology-amt, situé dans le chemin
 ```docker-compose up```
 
 pour pouvoir lancer votre image docker.
+
+Après avoir lancer la commande, vous pouvez accéder au lien suivant pour voir l'API:
+
+```http://localhost:8080/api/swagger-ui.html```
