@@ -90,6 +90,59 @@ public class RulesApiController implements RulesApi {
     }
 
     @Override
+    public ResponseEntity<Rule> updateRuleById(@ApiParam(value = "The API key header" ,required=true ) @RequestHeader(value="apiKey", required=true) String apiKey,
+                                               @ApiParam(value = "",required=true ) @PathVariable("ruleId") Long ruleId,
+                                               @ApiParam(value = "" ,required=true ) @RequestBody RuleWithoutId rule) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
+
+        RuleThen ruleThen = rule.getThen();
+        RuleIf ruleIf = rule.getIf();
+
+        if (ruleThen == null || ruleIf == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'if' and 'then' field are mandatory");
+        }
+
+        if (ruleIf.getType() == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'type' field in 'if' is mandatory");
+        }
+
+        RuleThenAwardPoints thenAwardPts = ruleThen.getAwardPoints();
+
+        // If there is nothing in Then
+        if (thenAwardPts == null && ruleThen.getAwardBadgeId() == null) {
+            return ApiResponseBuilder.badRequestMessage("At least one of the 'awardBadgeId' or 'awardPoints' should be informed");
+        }
+
+        // If AwardPoints exist and one of its field is missing
+        if (thenAwardPts != null && (thenAwardPts.getPointScaleId() == null || thenAwardPts.getAmount() == null)) {
+            return ApiResponseBuilder.badRequestMessage("The 'amount' and 'pointScaleId' fields of 'awardPoints are mandatory'");
+        }
+
+        RuleEntity newEntity = toRuleEntity(rule, appId);
+        RuleEntity oldEntity = ruleRepository.findOne(ruleId);
+        if (oldEntity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!oldEntity.getApplicationId().equals(appId)) {
+            return ApiResponseBuilder.forbiddenMessage();
+        }
+
+        newEntity.setId(oldEntity.getId());
+        ruleRepository.save(newEntity);
+        Long id = newEntity.getId();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newEntity.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(toRule(newEntity));
+    }
+
+    @Override
     public ResponseEntity<List<Rule>> getAllRules(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
         Long appId = getAppId(apiKey);
         if (appId == null) {

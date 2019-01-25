@@ -73,23 +73,6 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteBadgeById(String apiKey, Long badgeId) {
-        Long appId = getAppId(apiKey);
-        if (appId == null) {
-            return ApiResponseBuilder.unauthorizedMessage();
-        }
-        BadgeEntity badge = badgeRepository.findOne(badgeId);
-        if (badge == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if (!badge.getApplicationId().equals(appId)) {
-            return ApiResponseBuilder.forbiddenMessage();
-        }
-        badgeRepository.delete(badgeId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
     public ResponseEntity<List<Badge>> getAllBadges(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
         Long appId = getAppId(apiKey);
         if (appId == null) {
@@ -118,6 +101,54 @@ public class BadgesApiController implements BadgesApi {
             return ApiResponseBuilder.forbiddenMessage();
         }
         return ResponseEntity.ok(toBadge(badge));
+    }
+
+    @Override
+    public ResponseEntity<Badge> updateBadgeById(@ApiParam(value = "The API key header" ,required=true ) @RequestHeader(value="apiKey", required=true) String apiKey,
+                                                 @ApiParam(value = "",required=true ) @PathVariable("badgeId") Long badgeId,
+                                                 @ApiParam(value = "" ,required=true ) @RequestBody BadgeWithoutId badge) {
+        Long appId = getAppId(apiKey);
+        if (appId == null) {
+            return ApiResponseBuilder.unauthorizedMessage();
+        }
+
+        if (badge.getImage() == null || badge.getName() == null) {
+            return ApiResponseBuilder.badRequestMessage("The 'name' and 'image' fields are mandatory");
+        }
+
+        BadgeEntity newEntity = toBadgeEntity(badge, appId);
+        BadgeEntity oldEntity = badgeRepository.findOne(badgeId);
+        if (oldEntity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!oldEntity.getApplicationId().equals(appId)) {
+            return ApiResponseBuilder.forbiddenMessage();
+        }
+        BadgeEntity foundDouble = null;
+        for (BadgeEntity be : badgeRepository.findAll()) {
+            if (be.getApplicationId().equals(appId) && be.getName().equals(newEntity.getName())) {
+                foundDouble = be;
+                break;
+            }
+        }
+        if (foundDouble != null) {
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(foundDouble.getId())
+                    .toUri();
+            return ApiResponseBuilder.conflictMessage(location);
+        }
+
+        newEntity.setId(oldEntity.getId());
+        badgeRepository.save(newEntity);
+        Long id = newEntity.getId();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newEntity.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(toBadge(newEntity));
     }
 
     private BadgeEntity toBadgeEntity(BadgeWithoutId badge, Long appId) {

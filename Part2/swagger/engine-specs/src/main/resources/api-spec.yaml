@@ -84,19 +84,39 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
-    delete:
-      description: Deletes a badge by ID.
-      operationId: deleteBadgeById
+    put:
+      description: Updates a badge by ID
+      operationId: updateBadgeById
+      consumes:
+        - application/json
       parameters:
         - in: path
           name: badgeId
           type: integer
           format: int64
           required: true
+        - name: badge
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BadgeWithoutId'
       responses:
-        204:
-          description: Badge successfully deleted
-
+        200:
+          description: Badge successfully updated
+          schema:
+            $ref: '#/definitions/Badge'
+        201:
+          description: Badge successfully created
+          schema:
+            $ref: '#/definitions/Badge'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
   /pointScales:
     parameters:
       - $ref: '#/parameters/apiParam'
@@ -159,6 +179,39 @@ paths:
           description: PointScale successfully retrieved
           schema:
             $ref: '#/definitions/PointScale'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      description: Updates a PointScale by ID
+      operationId: updatePointScaleById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: pointScaleId
+          type: integer
+          format: int64
+          required: true
+        - name: pointScale
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointScaleWithoutId'
+      responses:
+        200:
+          description: PointScale successfully updated
+          schema:
+            $ref: '#/definitions/PointScale'
+        201:
+          description: PointScale successfully created
+          schema:
+            $ref: '#/definitions/PointScale'
+        400:
+          $ref: '#/responses/BadRequest'
         401:
           $ref: '#/responses/Unauthorized'
         403:
@@ -233,7 +286,7 @@ paths:
     parameters:
       - $ref: '#/parameters/apiParam'
     get:
-      description: Gets a PointScale by ID.
+      description: Gets a Rule by ID.
       operationId: getRuleById
       produces:
         - application/json
@@ -248,6 +301,39 @@ paths:
           description: Rule successfully retrieved
           schema:
             $ref: '#/definitions/Rule'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      description: Updates a Rule by ID
+      operationId: updateRuleById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: ruleId
+          type: integer
+          format: int64
+          required: true
+        - name: rule
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RuleWithoutId'
+      responses:
+        200:
+          description: Rule successfully updated
+          schema:
+            $ref: '#/definitions/Rule'
+        201:
+          description: Rule successfully created
+          schema:
+            $ref: '#/definitions/Rule'
+        400:
+          $ref: '#/responses/BadRequest'
         401:
           $ref: '#/responses/Unauthorized'
         403:
@@ -273,6 +359,151 @@ paths:
             $ref: '#/definitions/Application'
         400:
           $ref: '#/responses/BadRequest'
+  /applications/{appId}:
+    delete:
+      description: Deletes an application by ID.
+      operationId: deleteAppById
+      parameters:
+        - in: path
+          name: appId
+          type: integer
+          format: int64
+          required: true
+      responses:
+        204:
+          description: Badge successfully deleted
+    put:
+      description: Updates a Application by ID
+      operationId: updateAppById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: appId
+          type: integer
+          format: int64
+          required: true
+        - name: application
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationWithoutId'
+      responses:
+        200:
+          description: Application successfully updated
+          schema:
+            $ref: '#/definitions/Application'
+        201:
+          description: Application successfully created
+          schema:
+            $ref: '#/definitions/Application'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+  /users:
+    parameters:
+      - $ref: '#/parameters/apiParam'
+    post:
+      description: create a user
+      operationId: createUser
+      consumes:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithoutId'
+      responses:
+        201:
+          description: User successfully created
+          schema:
+            $ref: '#/definitions/User'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+    get:
+      description: get the list of all users
+      operationId: getAllUsers
+      produces:
+        - application/json
+      responses:
+        200:
+          description: List of uesrs successfully retrieved
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+  /users/{userId}:
+    parameters:
+      - $ref: '#/parameters/apiParam'
+    get:
+      description: Gets a User by ID.
+      operationId: getUserById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: User successfully retrieved
+          schema:
+            $ref: '#/definitions/User'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      description: Updates a User by ID
+      operationId: updateUserById
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: userId
+          type: integer
+          format: int64
+          required: true
+        - name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserWithoutId'
+      responses:
+        200:
+          description: User successfully updated
+          schema:
+            $ref: '#/definitions/User'
+        201:
+          description: User successfully created
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
 responses:
   Unauthorized:
     description: Unauthorized, make sure you authentified using your apiKey
@@ -286,6 +517,45 @@ responses:
     description: Requested element not found
 
 definitions:
+  User:
+    type: object
+    properties:
+      id:
+        description: This is the id in our system
+        type: integer
+        format: int64
+      foreignId:
+        description: This is the id in your system
+        type: string
+      appId:
+        type: integer
+        format: int64
+      ownedBadges:
+        type: array
+        items:
+          type: integer
+          format: int64
+      pointScales:
+        type: array
+        items:
+          $ref: '#/definitions/PointScaleScore'
+  UserWithoutId:
+    type: object
+    properties:
+      foreignId:
+        description: This is the id in your system
+        type: string
+      appId:
+        type: integer
+        format: int64
+  PointScaleScore:
+    type: object
+    properties:
+      pointScaleId:
+        type: integer
+        format: int64
+      amount:
+        type: integer
   ApplicationWithoutId:
     type: object
     properties:

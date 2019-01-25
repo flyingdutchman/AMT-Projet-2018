@@ -21,6 +21,7 @@ Feature: Badges Creation
     When i POST it to the /badges endpoint with KeyA
     And i POST it to the /badges endpoint with KeyA
     Then i receive a 409 status code from the /badges endpoint
+    But i have the location of the already existing badge
 
   Scenario: It is possible to create two badge with the same name in different apps
     Given i have a badge payload
@@ -36,9 +37,4 @@ Feature: Badges Creation
   Scenario: You need to give a valid apiKey to use the badge api
     Given i have a badge payload
     When i POST it to the /badges endpoint with FakeKey
-    Then i receive a 401 status code from the /events endpoint
-
-  Scenario: You need to give a valid apiKey to use the badge api
-    Given i have a badge payload
-    When i POST it to the /badges endpoint with no Key
-    Then i receive a 401 status code from the /events endpoint
+    Then i receive a 401 status code from the /badges endpoint
