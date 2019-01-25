@@ -78,7 +78,7 @@ public class RuleSteps {
     @When("^i POST it to the /rules endpoint with (Key[ABC]|FakeKey)$")
     public void iPOSTItToTheRulesEndpointWithKeyA(String apiKey) {
         try {
-            apiSuccessBehaviour(api.createRuleWithHttpInfo(apiKey, ruleWithoutId));
+            apiSuccessBehaviour(api.createRuleWithHttpInfo(getApiKeyByName(apiKey), ruleWithoutId));
         } catch (ApiException e) {
             apiExceptionBehaviour(e);
         }

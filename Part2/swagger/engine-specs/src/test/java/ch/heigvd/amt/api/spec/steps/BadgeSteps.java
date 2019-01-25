@@ -10,11 +10,8 @@ import ch.heigvd.amt.api.dto.BadgeWithoutId;
 import ch.heigvd.amt.api.spec.helpers.Environment;
 import cucumber.api.java.After;
 import cucumber.api.java.en.*;
-import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -49,7 +46,7 @@ public class BadgeSteps {
         stemAppThree = new ApplicationWithoutId();
         stemAppOne.setOwner(Long.MAX_VALUE);
         stemAppTwo.setOwner(Long.MAX_VALUE);
-        stemAppThree.setOwner(Long.MAX_VALUE-1);
+        stemAppThree.setOwner(Long.MAX_VALUE - 1);
     }
 
     @And("^i populate the server with them and get their respective Apikeys$")
@@ -120,11 +117,11 @@ public class BadgeSteps {
     public void thereAreBadgesInTheRepositoriesOwnedByAppA(int nbBadges, String apps) {
         String[] appsArray = apps.split(",");
         try {
-            for(int i = 0; i < nbBadges; i++) {
+            for (int i = 0; i < nbBadges; i++) {
                 BadgeWithoutId badgeWithoutId = new BadgeWithoutId();
-                badgeWithoutId.setName("Badge "+i);
-                badgeWithoutId.setImage("image"+i+".png");
-                String apiKey = getApiKeyByName(appsArray[(i >= appsArray.length) ? (appsArray.length-1) : i]);
+                badgeWithoutId.setName("Badge " + i);
+                badgeWithoutId.setImage("image" + i + ".png");
+                String apiKey = getApiKeyByName(appsArray[(i >= appsArray.length) ? (appsArray.length - 1) : i]);
                 api.createBadge(apiKey, badgeWithoutId);
             }
         } catch (ApiException e) {
@@ -208,7 +205,7 @@ public class BadgeSteps {
 
     @After
     public void cleanUp() {
-        if(api!= null && appOne != null && appTwo != null && appThree != null) {
+        if (api != null && appOne != null && appTwo != null && appThree != null) {
             try {
                 api.deleteAppById(appOne.getId());
                 api.deleteAppById(appTwo.getId());

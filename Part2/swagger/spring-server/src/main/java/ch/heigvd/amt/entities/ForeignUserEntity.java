@@ -20,6 +20,11 @@ public class ForeignUserEntity implements Serializable {
     private ArrayList<Long> badgeOwned;
     private HashMap<Long, Integer> pointScaleProgress;
 
+    public ForeignUserEntity() {
+        badgeOwned = new ArrayList<>();
+        pointScaleProgress = new HashMap<>();
+    }
+
     public long getId() {
         return id;
     }
