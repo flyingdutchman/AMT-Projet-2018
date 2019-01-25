@@ -84,19 +84,6 @@ paths:
           $ref: '#/responses/Forbidden'
         404:
           $ref: '#/responses/NotFound'
-    delete:
-      description: Deletes a badge by ID.
-      operationId: deleteBadgeById
-      parameters:
-        - in: path
-          name: badgeId
-          type: integer
-          format: int64
-          required: true
-      responses:
-        204:
-          description: Badge successfully deleted
-
   /pointScales:
     parameters:
       - $ref: '#/parameters/apiParam'
@@ -233,7 +220,7 @@ paths:
     parameters:
       - $ref: '#/parameters/apiParam'
     get:
-      description: Gets a PointScale by ID.
+      description: Gets a Rule by ID.
       operationId: getRuleById
       produces:
         - application/json
@@ -273,6 +260,19 @@ paths:
             $ref: '#/definitions/Application'
         400:
           $ref: '#/responses/BadRequest'
+  /applications/{appId}:
+    delete:
+      description: Deletes an application by ID.
+      operationId: deleteAppById
+      parameters:
+        - in: path
+          name: appId
+          type: integer
+          format: int64
+          required: true
+      responses:
+        204:
+          description: Badge successfully deleted
 responses:
   Unauthorized:
     description: Unauthorized, make sure you authentified using your apiKey

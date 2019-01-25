@@ -73,23 +73,6 @@ public class BadgesApiController implements BadgesApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteBadgeById(String apiKey, Long badgeId) {
-        Long appId = getAppId(apiKey);
-        if (appId == null) {
-            return ApiResponseBuilder.unauthorizedMessage();
-        }
-        BadgeEntity badge = badgeRepository.findOne(badgeId);
-        if (badge == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if (!badge.getApplicationId().equals(appId)) {
-            return ApiResponseBuilder.forbiddenMessage();
-        }
-        badgeRepository.delete(badgeId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
     public ResponseEntity<List<Badge>> getAllBadges(@ApiParam(value = "The API key header", required = true) @RequestHeader(value = "apiKey", required = true) String apiKey) {
         Long appId = getAppId(apiKey);
         if (appId == null) {

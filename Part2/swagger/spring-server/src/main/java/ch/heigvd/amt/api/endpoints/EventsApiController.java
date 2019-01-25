@@ -27,10 +27,6 @@ public class EventsApiController implements EventsApi {
     @Autowired
     ForeignUserRepository foreignUserRepository;
     @Autowired
-    BadgeAwardRepository badgeAwardRepository;
-    @Autowired
-    PointsAwardRepository pointsAwardRepository;
-    @Autowired
     ApplicationRepository applicationRepository;
 
     @Override
@@ -60,26 +56,10 @@ public class EventsApiController implements EventsApi {
                 // Add the badge and points
                 if (r.getAwardBadge() != null) {
                     // Record Reward and If the badge is not already owned, add it
-                    boolean hasCreatedBadge = foreignUser.addOwnedBadge(r.getAwardBadge());
-                    if (hasCreatedBadge) {
-                        // And record the award event
-                        BadgeAwardEntity badgeAwardEntity = new BadgeAwardEntity();
-                        badgeAwardEntity.setBadgeId(r.getAwardBadge());
-                        badgeAwardEntity.setTimestamp(event.getTimestamp());
-                        badgeAwardEntity.setForeignUserId(foreignUser.getId());
-                        badgeAwardEntity.setApplicationId(appId);
-                        badgeAwardRepository.save(badgeAwardEntity);
-                    }
+                    foreignUser.addOwnedBadge(r.getAwardBadge());
                 }
                 if (r.getPointScale() != null) {
                     foreignUser.addPointScaleProgress(r.getPointScale(), r.getAmount());
-                    // Record Reward
-                    PointsAwardEntity pointsAwardEntity = new PointsAwardEntity();
-                    pointsAwardEntity.setAmount(r.getAmount());
-                    pointsAwardEntity.setPointScaleId(r.getPointScale());
-                    pointsAwardEntity.setTimestamp(event.getTimestamp());
-                    pointsAwardEntity.setForeignUserId(foreignUser.getId());
-                    pointsAwardEntity.setApplicationId(appId);
                 }
             }
 
