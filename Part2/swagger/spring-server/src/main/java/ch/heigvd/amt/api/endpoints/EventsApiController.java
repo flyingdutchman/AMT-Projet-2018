@@ -44,7 +44,7 @@ public class EventsApiController implements EventsApi {
                 //Get the user
                 ForeignUserEntity foreignUser = null;
                 for (ForeignUserEntity fue : foreignUserRepository.findAll()) {
-                    if (fue.getApplicationUserId().equals(event.getUserId()) && fue.getApplicationId().equals(appId)) {
+                    if (fue.getForeignId().equals(event.getUserId()) && fue.getApplicationId().equals(appId)) {
                         foreignUser = fue;
                         break;
                     }
